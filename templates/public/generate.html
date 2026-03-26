@@ -1,0 +1,468 @@
+{% extends "base.html" %}
+
+{% block title %}Générer un Logo - Générateur de Logos RDC{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <!-- Left Column: Logo Preview (66%) -->
+  <div class="lg:col-span-2">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <!-- Preview Header -->
+      <div class="bg-gradient-to-r from-rdc-bleu to-rdc-noir p-6 text-white">
+        <h2 class="text-2xl font-bold">Aperçu du Logo</h2>
+        <p class="text-blue-100 text-sm mt-1">Votre logo généré s'affichera ci-dessous</p>
+      </div>
+
+      <!-- Preview Container -->
+      <div id="preview-container" class="flex items-center justify-center min-h-96 bg-gray-100 p-8 relative">
+        <div id="preview-loading" class="text-center">
+          <svg class="w-16 h-16 text-rdc-bleu mx-auto mb-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p class="text-gray-600 font-semibold">Remplissez le formulaire et cliquez sur "Générer"</p>
+        </div>
+
+        <div id="preview-error" class="text-center hidden">
+          <svg class="w-16 h-16 text-rdc-rouge mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p id="error-message" class="text-rdc-rouge font-semibold mt-4"></p>
+        </div>
+
+        <img id="preview-image" src="" alt="Logo preview" class="max-h-96 max-w-full hidden" />
+      </div>
+
+      <!-- Download Buttons -->
+      <div id="download-section" class="hidden bg-gray-50 border-t border-gray-200 p-6">
+        <h3 class="text-lg font-bold text-rdc-noir mb-4">Télécharger le Logo</h3>
+        <div class="flex flex-wrap gap-4">
+          <button
+            type="button"
+            id="download-png-btn"
+            class="btn-primary flex items-center space-x-2"
+            onclick="downloadLogo('png')"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            <span>PNG</span>
+          </button>
+
+          <button
+            type="button"
+            id="download-jpg-btn"
+            class="btn-outline"
+            onclick="downloadLogo('jpg')"
+          >
+            <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            JPG
+          </button>
+
+          <button
+            type="button"
+            id="share-btn"
+            class="btn-secondary flex items-center space-x-2"
+            onclick="shareLogo()"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C9.589 12.938 10 12.049 10 11c0-1.657-1.343-3-3-3s-3 1.343-3 3 1.343 3 3 3c.981 0 1.85-.353 2.53-.92l6.86 3.83c.15.84.75 1.54 1.53 1.84m0 0a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            <span>Partager</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Generation Form (33%) -->
+  <div class="lg:col-span-1">
+    <div class="bg-white rounded-lg shadow-md p-8 sticky top-8">
+      <h2 class="text-2xl font-bold text-rdc-noir mb-6">Générer un Logo</h2>
+
+      <form id="generate-form" class="space-y-5">
+        <!-- CSRF Token -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <!-- Template Selector -->
+        <div>
+          <label for="template_id" class="block text-sm font-semibold text-rdc-noir mb-2">
+            Modèle <span class="text-rdc-rouge">*</span>
+          </label>
+          <select
+            id="template_id"
+            name="template_id"
+            required
+            class="input-field"
+          >
+            <option value="">Choisir un modèle...</option>
+            {% for template in templates %}
+              <option value="{{ template.id }}">
+                {{ template.name }}
+                {% if template.description %} - {{ template.description }}{% endif %}
+              </option>
+            {% endfor %}
+          </select>
+          <p class="text-xs text-gray-500 mt-1">Sélectionnez le modèle de logo</p>
+        </div>
+
+        <!-- Institution Name -->
+        <div>
+          <label for="institution_name" class="block text-sm font-semibold text-rdc-noir mb-2">
+            Nom de l'Institution <span class="text-rdc-rouge">*</span>
+          </label>
+          <input
+            type="text"
+            id="institution_name"
+            name="institution_name"
+            required
+            maxlength="255"
+            class="input-field"
+            placeholder="Ex: Ministère de l'Éducation"
+            oninput="checkFormValidity()"
+          >
+          <p class="text-xs text-gray-500 mt-1">Le nom s'affichera sur le logo</p>
+        </div>
+
+        <!-- Language Selector -->
+        <div>
+          <label for="language" class="block text-sm font-semibold text-rdc-noir mb-2">
+            Langue <span class="text-rdc-rouge">*</span>
+          </label>
+          <select
+            id="language"
+            name="language"
+            required
+            class="input-field"
+            onchange="checkFormValidity()"
+          >
+            <option value="fr">Français</option>
+            <option value="lingala">Lingala</option>
+            <option value="swahili">Swahili</option>
+          </select>
+        </div>
+
+        <!-- Generate Button -->
+        <button
+          type="submit"
+          id="generate-btn"
+          class="w-full btn-primary flex items-center justify-center space-x-2"
+          disabled
+        >
+          <svg id="generate-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          <span id="generate-text">Générer</span>
+        </button>
+
+        <!-- Loading Indicator -->
+        <div id="loading-indicator" class="hidden text-center py-3">
+          <svg class="w-6 h-6 text-rdc-bleu mx-auto animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p class="text-sm text-gray-600 mt-2">Génération en cours...</p>
+        </div>
+      </form>
+
+      <!-- Info Box -->
+      <div class="mt-8 p-4 bg-blue-50 border-l-4 border-rdc-bleu rounded">
+        <h4 class="text-sm font-bold text-rdc-bleu mb-2">💡 Conseil</h4>
+        <p class="text-xs text-gray-700">
+          Vous pouvez générer plusieurs variantes du logo en changeant le modèle ou la langue.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Share Modal -->
+<div id="share-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-8">
+    <h3 class="text-xl font-bold text-rdc-noir mb-4">Partager le Logo</h3>
+
+    <div id="share-loading" class="hidden text-center py-8">
+      <svg class="w-8 h-8 text-rdc-bleu mx-auto animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <p class="text-gray-600 mt-4">Création du lien de partage...</p>
+    </div>
+
+    <div id="share-content" class="hidden space-y-4">
+      <p class="text-sm text-gray-700">
+        Ce lien permet à d'autres personnes de voir et télécharger ce logo sans se connecter.
+      </p>
+
+      <div class="relative">
+        <input
+          type="text"
+          id="share-url"
+          class="input-field"
+          readonly
+        >
+        <button
+          type="button"
+          id="copy-btn"
+          class="absolute right-2 top-2 px-3 py-1 bg-rdc-bleu text-white text-sm rounded hover:bg-opacity-90 transition"
+          onclick="copyToClipboard()"
+        >
+          Copier
+        </button>
+      </div>
+
+      <p id="copy-success" class="hidden text-sm text-green-600 font-semibold">
+        ✓ Lien copié dans le presse-papiers!
+      </p>
+
+      <div class="flex space-x-3">
+        <button
+          type="button"
+          class="flex-1 btn-outline"
+          onclick="closeShareModal()"
+        >
+          Fermer
+        </button>
+        <button
+          type="button"
+          id="share-open-btn"
+          class="flex-1 btn-primary"
+          onclick="openShareURL()"
+        >
+          Ouvrir
+        </button>
+      </div>
+    </div>
+
+    <div id="share-error" class="hidden text-center py-8">
+      <p id="share-error-message" class="text-rdc-rouge font-semibold"></p>
+      <button
+        type="button"
+        class="mt-4 btn-outline w-full"
+        onclick="closeShareModal()"
+      >
+        Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for logo generation -->
+<script>
+let currentLogoId = null;
+
+// Check form validity for button state
+function checkFormValidity() {
+  const templateId = document.getElementById('template_id').value;
+  const institutionName = document.getElementById('institution_name').value.trim();
+  const generateBtn = document.getElementById('generate-btn');
+
+  if (templateId && institutionName) {
+    generateBtn.disabled = false;
+  } else {
+    generateBtn.disabled = true;
+  }
+}
+
+// Handle form submission
+document.getElementById('generate-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const templateId = document.getElementById('template_id').value;
+  const institutionName = document.getElementById('institution_name').value.trim();
+  const language = document.getElementById('language').value;
+
+  if (!templateId || !institutionName) {
+    showError('Veuillez remplir tous les champs requis');
+    return;
+  }
+
+  // Show loading state
+  showLoading(true);
+  hideDownloadButtons();
+  hidePreviewImage();
+
+  try {
+    const response = await fetch('{{ url_for("public.api_generate") }}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        template_id: parseInt(templateId),
+        institution_name: institutionName,
+        language: language
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      currentLogoId = data.logo_id;
+      showPreviewImage(data.preview_url);
+      showDownloadButtons();
+      hideError();
+    } else {
+      showError(data.error || 'Erreur lors de la génération du logo');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    showError('Erreur réseau. Veuillez réessayer.');
+  } finally {
+    showLoading(false);
+  }
+});
+
+// UI Helper Functions
+function showLoading(show) {
+  const indicator = document.getElementById('loading-indicator');
+  const generateBtn = document.getElementById('generate-btn');
+  const generateText = document.getElementById('generate-text');
+
+  if (show) {
+    indicator.classList.remove('hidden');
+    generateBtn.disabled = true;
+    generateText.textContent = 'Génération...';
+  } else {
+    indicator.classList.add('hidden');
+    generateBtn.disabled = false;
+    generateText.textContent = 'Générer';
+  }
+}
+
+function showPreviewImage(url) {
+  const img = document.getElementById('preview-image');
+  const loading = document.getElementById('preview-loading');
+
+  img.src = url;
+  img.classList.remove('hidden');
+  loading.classList.add('hidden');
+}
+
+function hidePreviewImage() {
+  const img = document.getElementById('preview-image');
+  const loading = document.getElementById('preview-loading');
+  const error = document.getElementById('preview-error');
+
+  img.classList.add('hidden');
+  error.classList.add('hidden');
+  loading.classList.remove('hidden');
+}
+
+function showError(message) {
+  const container = document.getElementById('preview-container');
+  const error = document.getElementById('preview-error');
+  const errorMsg = document.getElementById('error-message');
+  const img = document.getElementById('preview-image');
+  const loading = document.getElementById('preview-loading');
+
+  error.classList.remove('hidden');
+  img.classList.add('hidden');
+  loading.classList.add('hidden');
+  errorMsg.textContent = message;
+}
+
+function hideError() {
+  document.getElementById('preview-error').classList.add('hidden');
+}
+
+function showDownloadButtons() {
+  document.getElementById('download-section').classList.remove('hidden');
+}
+
+function hideDownloadButtons() {
+  document.getElementById('download-section').classList.add('hidden');
+}
+
+// Download functions
+function downloadLogo(format) {
+  if (!currentLogoId) {
+    alert('Aucun logo à télécharger');
+    return;
+  }
+
+  const url = `{{ url_for('public.download', logo_id='LOGO_ID', format='FORMAT') }}`
+    .replace('LOGO_ID', currentLogoId)
+    .replace('FORMAT', format);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `logo_${currentLogoId}.${format}`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// Share functions
+function shareLogo() {
+  if (!currentLogoId) {
+    alert('Aucun logo à partager');
+    return;
+  }
+
+  const modal = document.getElementById('share-modal');
+  const loading = document.getElementById('share-loading');
+  const content = document.getElementById('share-content');
+  const error = document.getElementById('share-error');
+
+  modal.classList.remove('hidden');
+  loading.classList.remove('hidden');
+  content.classList.add('hidden');
+  error.classList.add('hidden');
+
+  // Create share link
+  fetch('{{ url_for("public.api_share") }}', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      logo_id: currentLogoId
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    loading.classList.add('hidden');
+    if (data.share_url) {
+      document.getElementById('share-url').value = data.share_url;
+      content.classList.remove('hidden');
+    } else {
+      document.getElementById('share-error-message').textContent = data.error || 'Erreur lors du partage';
+      error.classList.remove('hidden');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    loading.classList.add('hidden');
+    document.getElementById('share-error-message').textContent = 'Erreur réseau';
+    error.classList.remove('hidden');
+  });
+}
+
+function closeShareModal() {
+  document.getElementById('share-modal').classList.add('hidden');
+  document.getElementById('copy-success').classList.add('hidden');
+}
+
+function copyToClipboard() {
+  const url = document.getElementById('share-url');
+  url.select();
+  document.execCommand('copy');
+
+  const success = document.getElementById('copy-success');
+  success.classList.remove('hidden');
+  setTimeout(() => {
+    success.classList.add('hidden');
+  }, 3000);
+}
+
+function openShareURL() {
+  const url = document.getElementById('share-url').value;
+  window.open(url, '_blank');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+  checkFormValidity();
+});
+</script>
+{% endblock %}

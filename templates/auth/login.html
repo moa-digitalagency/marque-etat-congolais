@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion - Générateur de Logos RDC{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="w-full max-w-md">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 bg-rdc-bleu rounded-full flex items-center justify-center mx-auto mb-4">
+        <span class="text-white font-bold text-2xl">RDC</span>
+      </div>
+      <h1 class="text-3xl font-bold text-rdc-noir mb-2">Connexion</h1>
+      <p class="text-gray-600">Accédez à votre compte Générateur de Logos</p>
+    </div>
+
+    <!-- Login Form -->
+    <form method="POST" action="{{ url_for('auth.login') }}" class="bg-white rounded-lg shadow-md p-8 space-y-6">
+      <!-- CSRF Token -->
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <!-- Email Field -->
+      <div>
+        <label for="email" class="block text-sm font-semibold text-rdc-noir mb-2">
+          Adresse e-mail
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="input-field"
+          placeholder="exemple@domaine.com"
+        >
+        <p class="text-xs text-gray-500 mt-1">Nous ne partagerons jamais votre e-mail.</p>
+      </div>
+
+      <!-- Password Field -->
+      <div>
+        <label for="password" class="block text-sm font-semibold text-rdc-noir mb-2">
+          Mot de passe
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          class="input-field"
+          placeholder="••••••••"
+        >
+        <p class="text-xs text-gray-500 mt-1">Au moins 6 caractères.</p>
+      </div>
+
+      <!-- Remember Me -->
+      <div class="flex items-center">
+        <input
+          type="checkbox"
+          id="remember"
+          name="remember"
+          class="w-4 h-4 text-rdc-bleu bg-gray-100 border-gray-300 rounded focus:ring-rdc-bleu cursor-pointer"
+        >
+        <label for="remember" class="ml-2 text-sm text-gray-700 cursor-pointer">
+          Se souvenir de moi
+        </label>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="w-full btn-primary"
+      >
+        Connexion
+      </button>
+
+      <!-- Divider -->
+      <div class="relative">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-2 bg-white text-gray-500">Ou</span>
+        </div>
+      </div>
+
+      <!-- Register Link -->
+      <div class="text-center">
+        <p class="text-sm text-gray-700">
+          Pas encore de compte?
+          <a href="{{ url_for('auth.register') }}" class="font-semibold text-rdc-bleu hover:text-rdc-rouge transition-colors">
+            S'inscrire
+          </a>
+        </p>
+      </div>
+    </form>
+
+    <!-- Security Note -->
+    <div class="mt-8 p-4 bg-blue-50 border-l-4 border-rdc-bleu rounded">
+      <p class="text-xs text-gray-700">
+        <strong>Sécurité :</strong> Votre mot de passe est chiffré et sécurisé. Ne partagez jamais vos informations de connexion.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Générateur de logos - République Démocratique du Congo">
+
+  <title>{% block title %}Générateur de Logos - RDC{% endblock %}</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom colors for design system -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'rdc-bleu': '#0095C9',
+            'rdc-rouge': '#DB3832',
+            'rdc-jaune': '#FFF24B',
+            'rdc-noir': '#323230',
+          },
+          spacing: {
+            'module': '110px',
+            'section': '220px',
+          },
+          fontFamily: {
+            'inter': ['Inter', 'sans-serif'],
+            'cooper': ['Cooper Hewitt', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom styles -->
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      @apply px-6 py-3 bg-rdc-bleu text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all;
+    }
+
+    .btn-secondary {
+      @apply px-6 py-3 bg-rdc-rouge text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all;
+    }
+
+    .btn-outline {
+      @apply px-6 py-3 border-2 border-rdc-bleu text-rdc-bleu font-semibold rounded-lg hover:bg-rdc-bleu hover:text-white transition-all;
+    }
+
+    .input-field {
+      @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-rdc-bleu focus:outline-none transition-colors;
+    }
+
+    .flash-error {
+      @apply p-4 mb-4 bg-red-100 border-l-4 border-rdc-rouge text-rdc-rouge rounded;
+    }
+
+    .flash-success {
+      @apply p-4 mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded;
+    }
+
+    .flash-info {
+      @apply p-4 mb-4 bg-blue-100 border-l-4 border-rdc-bleu text-rdc-bleu rounded;
+    }
+
+    .nav-link {
+      @apply text-gray-700 hover:text-rdc-bleu transition-colors font-medium;
+    }
+
+    .nav-link.active {
+      @apply text-rdc-bleu border-b-2 border-rdc-bleu pb-1;
+    }
+  </style>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50">
+  <!-- Navigation Bar -->
+  <nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo/Branding -->
+        <div class="flex items-center">
+          <a href="{{ url_for('index') if 'index' in config.get('APPLICATION_ROOT', '') else '/' }}" class="flex items-center">
+            <div class="w-10 h-10 bg-rdc-bleu rounded-full flex items-center justify-center mr-3">
+              <span class="text-white font-bold text-lg">RDC</span>
+            </div>
+            <span class="text-xl font-bold text-rdc-noir hidden sm:inline">Générateur de Logos</span>
+          </a>
+        </div>
+
+        <!-- Center Navigation -->
+        <div class="hidden md:flex space-x-8">
+          <a href="{{ url_for('public.generate') if current_user.is_authenticated else '#' }}"
+             class="nav-link {% if 'generate' in request.path %}active{% endif %}"
+             {% if not current_user.is_authenticated %}onclick="return false;" style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
+            Générer
+          </a>
+          <a href="{{ url_for('dashboard.index') if current_user.is_authenticated else '#' }}"
+             class="nav-link {% if 'dashboard' in request.path %}active{% endif %}"
+             {% if not current_user.is_authenticated %}onclick="return false;" style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
+            Historique
+          </a>
+        </div>
+
+        <!-- User Menu -->
+        <div class="flex items-center space-x-4">
+          {% if current_user.is_authenticated %}
+            <div class="relative group">
+              <button class="flex items-center space-x-2 text-gray-700 hover:text-rdc-bleu transition-colors">
+                <span class="hidden sm:inline font-medium">{{ current_user.email }}</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                <a href="{{ url_for('auth.profile') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-t-lg first:rounded-t-lg">
+                  Profil
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-b-lg last:rounded-b-lg border-t border-gray-200">
+                  Déconnexion
+                </a>
+              </div>
+            </div>
+          {% else %}
+            <a href="{{ url_for('auth.login') }}" class="nav-link">
+              Connexion
+            </a>
+            <a href="{{ url_for('auth.register') }}" class="btn-primary text-sm">
+              S'inscrire
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Messages -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'error' %}
+            <div class="flash-error" role="alert">
+              <p><strong>Erreur :</strong> {{ message }}</p>
+            </div>
+          {% elif category == 'success' %}
+            <div class="flash-success" role="alert">
+              <p><strong>Succès :</strong> {{ message }}</p>
+            </div>
+          {% elif category == 'info' %}
+            <div class="flash-info" role="alert">
+              <p><strong>Info :</strong> {{ message }}</p>
+            </div>
+          {% else %}
+            <div class="flash-info" role="alert">
+              <p>{{ message }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Main Content -->
+  <main class="min-h-screen flex-grow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-rdc-noir text-white mt-16 border-t-4 border-rdc-bleu">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-lg font-bold mb-4">Générateur de Logos</h3>
+          <p class="text-gray-300 text-sm">
+            Outil officiel pour la génération et la gestion des logos des institutions de la République Démocratique du Congo.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-bold mb-4">Navigation</h4>
+          <ul class="space-y-2 text-gray-300 text-sm">
+            {% if current_user.is_authenticated %}
+              <li><a href="{{ url_for('public.generate') }}" class="hover:text-rdc-bleu transition-colors">Générer un logo</a></li>
+              <li><a href="{{ url_for('dashboard.index') }}" class="hover:text-rdc-bleu transition-colors">Mes logos</a></li>
+              <li><a href="{{ url_for('auth.profile') }}" class="hover:text-rdc-bleu transition-colors">Profil</a></li>
+            {% else %}
+              <li><a href="{{ url_for('auth.login') }}" class="hover:text-rdc-bleu transition-colors">Connexion</a></li>
+              <li><a href="{{ url_for('auth.register') }}" class="hover:text-rdc-bleu transition-colors">Inscription</a></li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-bold mb-4">Informations</h4>
+          <ul class="space-y-2 text-gray-300 text-sm">
+            <li><a href="#" class="hover:text-rdc-bleu transition-colors">À propos</a></li>
+            <li><a href="#" class="hover:text-rdc-bleu transition-colors">Contactez-nous</a></li>
+            <li><a href="#" class="hover:text-rdc-bleu transition-colors">Conditions d'utilisation</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300 text-sm">
+        <p>&copy; 2024 République Démocratique du Congo. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  {% block scripts %}{% endblock %}
+</body>
+</html>
