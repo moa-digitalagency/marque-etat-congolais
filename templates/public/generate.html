@@ -250,6 +250,12 @@
 <script>
 let currentLogoId = null;
 
+// Get CSRF token from DOM
+function getCsrfToken() {
+  const token = document.querySelector('input[name="csrf_token"]')?.value;
+  return token || '';
+}
+
 // Check form validity for button state
 function checkFormValidity() {
   const templateId = document.getElementById('template_id').value;
@@ -286,6 +292,7 @@ document.getElementById('generate-form').addEventListener('submit', async functi
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-CSRFToken': getCsrfToken()
       },
       body: JSON.stringify({
         template_id: parseInt(templateId),
@@ -414,6 +421,7 @@ function shareLogo() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'X-CSRFToken': getCsrfToken()
     },
     body: JSON.stringify({
       logo_id: currentLogoId
@@ -445,9 +453,37 @@ function closeShareModal() {
 
 function copyToClipboard() {
   const url = document.getElementById('share-url');
-  url.select();
-  document.execCommand('copy');
+  const text = url.value;
 
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    // Modern Clipboard API
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        showCopySuccess();
+      })
+      .catch(() => {
+        // Fallback if clipboard fails
+        fallbackCopy(text);
+      });
+  } else {
+    // Fallback for older browsers
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.opacity = '0';
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textArea);
+  showCopySuccess();
+}
+
+function showCopySuccess() {
   const success = document.getElementById('copy-success');
   success.classList.remove('hidden');
   setTimeout(() => {

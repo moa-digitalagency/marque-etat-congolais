@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/moadigitalagency/design-system-marque-etat-congolais/**)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(python3 -m py_compile /Users/moadigitalagency/marque-etat-congolais/models/template.py)",
+      "Bash(python3 -m py_compile /Users/moadigitalagency/marque-etat-congolais/models/logo.py)",
+      "Bash(python3 -m py_compile /Users/moadigitalagency/marque-etat-congolais/models/shared_link.py)",
+      "Bash(python3 -m py_compile /Users/moadigitalagency/marque-etat-congolais/models/__init__.py)",
+      "Bash(grep -n \"def \" /Users/moadigitalagency/marque-etat-congolais/models/*.py)",
+      "Read(//Users/moadigitalagency/marque-etat-congolais/**)",
+      "Bash(chmod +x /Users/moadigitalagency/marque-etat-congolais/init_db.py)",
+      "Bash(python3 -m py_compile /Users/moadigitalagency/marque-etat-congolais/init_db.py)",
+      "Bash(python -m pytest tests/test_algorithms.py -v)",
+      "Bash(python3 -m pytest tests/test_algorithms.py -v)",
+      "Bash(pip install:*)",
+      "Bash(python3 -m pip install -r /Users/moadigitalagency/marque-etat-congolais/requirements.txt -q)",
+      "Bash(python3 -m pip install --break-system-packages -r /Users/moadigitalagency/marque-etat-congolais/requirements.txt -q)",
+      "Bash(python3 -m pip install --break-system-packages pytest -q)",
+      "Bash(git init:*)",
+      "Bash(python3 -m pytest tests/test_algorithms.py -v --tb=short)",
+      "Bash(python3 -m py_compile /Users/moadigitalagency/marque-etat-congolais/services/logo_generator.py)",
+      "Bash(python3 -c \"from services.logo_generator import LogoGeneratorService; print\\(''✓ LogoGeneratorService imports successfully''\\)\")",
+      "Bash(python3 -c \"from PIL import Image, ImageDraw, ImageFont; print\\(''✓ Pillow \\(PIL\\) is installed and accessible''\\)\")",
+      "Bash(/tmp/verify_report.txt:*)",
+      "Bash(python3 -m py_compile services/auth_service.py services/template_service.py services/share_service.py services/i18n_service.py services/__init__.py)",
+      "Bash(ls -la services/*.py)",
+      "Bash(python3:*)",
+      "Bash(grep -E \"\\\\.py$|^d\")",
+      "Bash(python -c \"from routes.public import public_bp; print\\(''✓ Module imported successfully''\\); print\\(f''✓ Blueprint name: {public_bp.name}''\\); print\\(f''✓ Routes registered:''\\); import inspect; for rule in [r for r in dir\\(public_bp\\) if not r.startswith\\(''_''\\)]: pass\")",
+      "Bash(python -c \"from routes.public import public_bp; print\\(''✅ Syntax OK''\\)\")",
+      "Bash(python -c \"from routes.api import api_bp; print\\(''✓ API blueprint imported successfully''\\); print\\(f''✓ Blueprint name: {api_bp.name}''\\); print\\(f''✓ Blueprint URL prefix: {api_bp.url_prefix}''\\)\")",
+      "Read(//api/**)",
+      "Bash(python -c \"import sys; sys.path.insert\\(0, ''.''\\); from routes.api import api_bp; print\\(''✅ Syntax OK''\\)\")",
+      "Bash(/tmp/template_summary.txt:*)"
+    ]
+  }
+}
