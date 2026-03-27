@@ -89,13 +89,13 @@
           <div>
             <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: 0;">Logos générés</p>
             <p style="font-size: var(--text-2xl); font-weight: 700; color: var(--primary); margin-top: var(--space-2); margin-bottom: 0;">
-              {{ current_user.logos.count() }}
+              {{ current_user.logos|length }}
             </p>
           </div>
           <div>
             <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: 0;">Logos partagés</p>
             <p style="font-size: var(--text-2xl); font-weight: 700; color: var(--rdc-rouge); margin-top: var(--space-2); margin-bottom: 0;">
-              {{ current_user.logos.filter_by(is_shared=True).count() }}
+              {{ current_user.logos|selectattr('is_shared')|list|length }}
             </p>
           </div>
         </div>
