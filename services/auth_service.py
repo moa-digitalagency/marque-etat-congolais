@@ -8,40 +8,31 @@ class AuthService:
     """Service for authentication and user management"""
 
     @staticmethod
-    def register_user(email: str, password: str, full_name: str = None, language: str = 'fr', role: str = 'user') -> User:
-        """
-        Register new user.
+    def register_user(email, password, full_name=None, language='fr', role='user'):
+        """Register a new user with validation"""
+        from models.user import User
+        import re
 
-        Args:
-            email: User email (must be unique)
-            password: Plain text password (will be hashed)
-            full_name: Optional full name
-            language: Preferred language (default 'fr')
-            role: User role ('user' or 'admin'), default 'user'
+        # Email validation
+        if not email or not re.match(r'^[^@]+@[^@]+\.[^@]+$', email):
+            raise ValueError('Email invalide')
 
-        Returns:
-            Created User object
-
-        Raises:
-            ValueError: If email already exists or invalid role
-        """
         if User.query.filter_by(email=email).first():
-            raise ValueError(f"User with email {email} already exists")
+            raise ValueError(f'Un utilisateur avec l\'email {email} existe déjà')
+
+        if not password or len(password) < 6:
+            raise ValueError('Le mot de passe doit contenir au moins 6 caractères')
 
         if role not in ['user', 'admin']:
-            raise ValueError(f"Invalid role: {role}. Must be 'user' or 'admin'")
+            raise ValueError('Rôle invalide')
 
-        user = User(
-            email=email,
-            full_name=full_name,
-            language=language,
-            role=role
-        )
+        if language not in ['fr', 'lingala', 'swahili']:
+            raise ValueError('Langue non supportée')
+
+        user = User(email=email, full_name=full_name, language=language, role=role)
         user.set_password(password)
-
         db.session.add(user)
         db.session.commit()
-
         return user
 
     @staticmethod
