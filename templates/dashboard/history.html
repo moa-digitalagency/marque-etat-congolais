@@ -6,30 +6,31 @@
 <!-- CSRF Token for API requests -->
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-<div>
+<div style="padding: var(--space-8) var(--space-4);">
   <!-- Header -->
-  <div class="mb-8">
-    <h1 class="text-4xl font-bold text-rdc-noir mb-2">Mes Logos Générés</h1>
-    <p class="text-gray-600">Gérez tous vos logos générés, téléchargez-les et partagez-les</p>
+  <div style="margin-bottom: var(--space-8);">
+    <h1 style="font-size: var(--text-4xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">Mes Logos Générés</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 0;">Gérez tous vos logos générés, téléchargez-les et partagez-les</p>
   </div>
 
   <!-- Action Bar -->
-  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-    <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+  <div class="card" style="margin-bottom: var(--space-8); display: flex; flex-direction: column; gap: var(--space-4); justify-content: space-between;">
+    <div style="display: flex; flex-direction: column; gap: var(--space-3); align-items: flex-start; justify-content: space-between;">
       <!-- Search/Filter -->
-      <div class="w-full sm:flex-1">
+      <div style="width: 100%; max-width: 400px;">
         <input
           type="text"
           id="search-input"
           placeholder="Rechercher par nom d'institution..."
-          class="input-field"
+          class="input"
+          style="width: 100%;"
           onkeyup="filterLogos()"
         >
       </div>
 
       <!-- Generate New Button -->
-      <a href="{{ url_for('public.generate') }}" class="btn-primary flex items-center space-x-2 whitespace-nowrap">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <a href="{{ url_for('public.generate') }}" class="btn btn-primary" style="display: flex; align-items: center; gap: var(--space-2); text-decoration: none; white-space: nowrap;">
+        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
         <span>Générer un nouveau logo</span>
@@ -39,14 +40,14 @@
 
   <!-- Empty State -->
   {% if not logos or logos|length == 0 %}
-    <div class="text-center py-16">
-      <svg class="w-20 h-20 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div style="text-align: center; padding: var(--space-16) var(--space-4);">
+      <svg style="width: 80px; height: 80px; color: var(--border-soft); margin: 0 auto var(--space-6);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
       </svg>
-      <h3 class="text-xl font-bold text-rdc-noir mb-2">Aucun logo généré</h3>
-      <p class="text-gray-600 mb-6">Vous n'avez pas encore créé de logo. Commencez maintenant!</p>
-      <a href="{{ url_for('public.generate') }}" class="btn-primary inline-flex items-center space-x-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <h3 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">Aucun logo généré</h3>
+      <p style="color: var(--text-secondary); margin-bottom: var(--space-6);">Vous n'avez pas encore créé de logo. Commencez maintenant!</p>
+      <a href="{{ url_for('public.generate') }}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: var(--space-2); text-decoration: none;">
+        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
         </svg>
         <span>Générer mon premier logo</span>
@@ -55,28 +56,28 @@
 
   {% else %}
     <!-- Logos Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="logos-grid">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-6);" id="logos-grid">
       {% for logo in logos %}
-        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow logo-card" data-institution="{{ logo.institution_name|lower }}">
+        <div class="card" style="overflow: hidden; padding: 0;" data-institution="{{ logo.institution_name|lower }}">
           <!-- Logo Preview -->
-          <div class="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+          <div style="position: relative; height: 192px; background-color: var(--bg-app); display: flex; align-items: center; justify-content: center; overflow: hidden;">
             {% if logo.preview_url %}
               <img
                 src="{{ logo.preview_url }}"
                 alt="Logo: {{ logo.institution_name }}"
-                class="max-h-full max-w-full object-contain"
+                style="max-height: 100%; max-width: 100%; object-fit: contain;"
               >
             {% else %}
-              <div class="text-center">
-                <svg class="w-12 h-12 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div style="text-align: center;">
+                <svg style="width: 48px; height: 48px; color: var(--border-soft); margin: 0 auto var(--space-2);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
-                <p class="text-gray-500 text-sm">Aperçu non disponible</p>
+                <p style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: 0;">Aperçu non disponible</p>
               </div>
             {% endif %}
 
             <!-- Template Badge -->
-            <div class="absolute top-3 right-3 bg-rdc-bleu text-white px-3 py-1 rounded-full text-xs font-semibold">
+            <div style="position: absolute; top: var(--space-3); right: var(--space-3); background-color: var(--primary); color: var(--text-inverse); padding: var(--space-2) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600;">
               {% if logo.template %}
                 {{ logo.template.name }}
               {% else %}
@@ -86,17 +87,17 @@
           </div>
 
           <!-- Card Content -->
-          <div class="p-6">
+          <div style="padding: var(--space-6);">
             <!-- Institution Name -->
-            <h3 class="text-lg font-bold text-rdc-noir mb-1 break-words">
+            <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-1); word-break: break-word;">
               {{ logo.institution_name }}
             </h3>
 
             <!-- Metadata -->
-            <div class="space-y-2 mb-4 text-sm text-gray-600">
+            <div style="display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-4); font-size: var(--text-sm); color: var(--text-secondary);">
               <!-- Language -->
-              <div class="flex items-center space-x-2">
-                <svg class="w-4 h-4 text-rdc-bleu" fill="currentColor" viewBox="0 0 20 20">
+              <div style="display: flex; align-items: center; gap: var(--space-2);">
+                <svg style="width: 16px; height: 16px; color: var(--primary);" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M5 9V7a1 1 0 011-1h8a1 1 0 011 1v2M5 9c0 1.657-4 4-4 4s4 2.343 4 4v2a1 1 0 001 1h8a1 1 0 001-1v-2c0-1.657 4-2.343 4-4M5 9h10"></path>
                 </svg>
                 <span>
@@ -113,8 +114,8 @@
               </div>
 
               <!-- Creation Date -->
-              <div class="flex items-center space-x-2">
-                <svg class="w-4 h-4 text-rdc-rouge" fill="currentColor" viewBox="0 0 20 20">
+              <div style="display: flex; align-items: center; gap: var(--space-2);">
+                <svg style="width: 16px; height: 16px; color: var(--rdc-rouge);" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h12a1 1 0 100-2H6z" clip-rule="evenodd"></path>
                 </svg>
                 <span>{{ logo.created_at.strftime('%d %b %Y') }}</span>
@@ -122,16 +123,17 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="space-y-3">
+            <div style="display: flex; flex-direction: column; gap: var(--space-3);">
               <!-- Download Buttons Row -->
-              <div class="flex gap-2">
+              <div style="display: flex; gap: var(--space-2);">
                 <button
                   type="button"
-                  class="flex-1 text-sm px-3 py-2 bg-rdc-bleu text-white rounded font-semibold hover:bg-opacity-90 transition flex items-center justify-center space-x-1"
+                  class="btn btn-primary btn-sm"
+                  style="flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--space-1);"
                   onclick="downloadLogo({{ logo.id }}, 'png')"
                   title="Télécharger en PNG"
                 >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                   </svg>
                   <span>PNG</span>
@@ -139,11 +141,12 @@
 
                 <button
                   type="button"
-                  class="flex-1 text-sm px-3 py-2 border-2 border-rdc-bleu text-rdc-bleu rounded font-semibold hover:bg-rdc-bleu hover:text-white transition flex items-center justify-center space-x-1"
+                  class="btn btn-outline btn-sm"
+                  style="flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--space-1);"
                   onclick="downloadLogo({{ logo.id }}, 'jpg')"
                   title="Télécharger en JPG"
                 >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                   </svg>
                   <span>JPG</span>
@@ -151,14 +154,15 @@
               </div>
 
               <!-- Share and Delete Buttons Row -->
-              <div class="flex gap-2">
+              <div style="display: flex; gap: var(--space-2);">
                 <button
                   type="button"
-                  class="flex-1 text-sm px-3 py-2 bg-green-500 text-white rounded font-semibold hover:bg-opacity-90 transition flex items-center justify-center space-x-1"
+                  class="btn btn-sm"
+                  style="flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--space-1); background-color: var(--color-success); color: var(--text-inverse); border: none; text-decoration: none;"
                   onclick="shareLogo({{ logo.id }})"
                   title="Créer un lien de partage"
                 >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C9.589 12.938 10 12.049 10 11c0-1.657-1.343-3-3-3s-3 1.343-3 3 1.343 3 3 3c.981 0 1.85-.353 2.53-.92l6.86 3.83c.15.84.75 1.54 1.53 1.84m0 0a3 3 0 11-6 0 3 3 0 016 0z"></path>
                   </svg>
                   <span>Partager</span>
@@ -166,11 +170,12 @@
 
                 <button
                   type="button"
-                  class="flex-1 text-sm px-3 py-2 bg-red-500 text-white rounded font-semibold hover:bg-opacity-90 transition flex items-center justify-center space-x-1"
+                  class="btn btn-sm"
+                  style="flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--space-1); background-color: var(--rdc-rouge); color: var(--text-inverse); border: none; text-decoration: none;"
                   onclick="deleteLogo({{ logo.id }}, '{{ logo.institution_name }}')"
                   title="Supprimer ce logo"
                 >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                   </svg>
                   <span>Supprimer</span>
@@ -184,9 +189,9 @@
 
     <!-- Pagination (if needed) -->
     {% if pagination %}
-      <div class="mt-12 flex justify-center space-x-2">
+      <div style="margin-top: var(--space-12); display: flex; justify-content: center; gap: var(--space-2); flex-wrap: wrap;">
         {% if pagination.has_prev %}
-          <a href="{{ url_for('dashboard.index', page=pagination.prev_num) }}" class="btn-outline text-sm">
+          <a href="{{ url_for('dashboard.index', page=pagination.prev_num) }}" class="btn btn-outline btn-sm">
             ← Précédent
           </a>
         {% endif %}
@@ -194,9 +199,9 @@
         {% for page_num in pagination.iter_pages() %}
           {% if page_num %}
             {% if page_num == pagination.page %}
-              <button class="px-4 py-2 bg-rdc-bleu text-white rounded font-semibold">{{ page_num }}</button>
+              <button class="btn btn-primary btn-sm">{{ page_num }}</button>
             {% else %}
-              <a href="{{ url_for('dashboard.index', page=page_num) }}" class="px-4 py-2 border-2 border-rdc-bleu text-rdc-bleu rounded hover:bg-rdc-bleu hover:text-white transition">
+              <a href="{{ url_for('dashboard.index', page=page_num) }}" class="btn btn-outline btn-sm">
                 {{ page_num }}
               </a>
             {% endif %}
@@ -204,7 +209,7 @@
         {% endfor %}
 
         {% if pagination.has_next %}
-          <a href="{{ url_for('dashboard.index', page=pagination.next_num) }}" class="btn-outline text-sm">
+          <a href="{{ url_for('dashboard.index', page=pagination.next_num) }}" class="btn btn-outline btn-sm">
             Suivant →
           </a>
         {% endif %}
@@ -213,98 +218,123 @@
   {% endif %}
 </div>
 
-<!-- Share Modal (Same as generate.html) -->
-<div id="share-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-8">
-    <h3 class="text-xl font-bold text-rdc-noir mb-4">Partager le Logo</h3>
-
-    <div id="share-loading" class="hidden text-center py-8">
-      <svg class="w-8 h-8 text-rdc-bleu mx-auto animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-      </svg>
-      <p class="text-gray-600 mt-4">Création du lien de partage...</p>
+<!-- Share Modal -->
+<div id="share-modal" class="modal-overlay" style="display: none;">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 style="margin-bottom: 0;">Partager le Logo</h3>
+      <button type="button" onclick="closeShareModal()" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0; font-size: var(--text-xl);">
+        ✕
+      </button>
     </div>
 
-    <div id="share-content" class="hidden space-y-4">
-      <p class="text-sm text-gray-700">
-        Ce lien permet à d'autres personnes de voir et télécharger ce logo sans se connecter.
-      </p>
-
-      <div class="relative">
-        <input
-          type="text"
-          id="share-url"
-          class="input-field"
-          readonly
-        >
-        <button
-          type="button"
-          id="copy-btn"
-          class="absolute right-2 top-2 px-3 py-1 bg-rdc-bleu text-white text-sm rounded hover:bg-opacity-90 transition"
-          onclick="copyToClipboard()"
-        >
-          Copier
-        </button>
+    <div class="modal-body">
+      <div id="share-loading" style="display: none; text-align: center; padding: var(--space-8);">
+        <svg style="width: 40px; height: 40px; color: var(--primary); margin: 0 auto var(--space-4); animation: spin 1s linear infinite;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <p style="color: var(--text-secondary);">Création du lien de partage...</p>
       </div>
 
-      <p id="copy-success" class="hidden text-sm text-green-600 font-semibold">
-        ✓ Lien copié dans le presse-papiers!
-      </p>
+      <div id="share-content" style="display: none; display: flex; flex-direction: column; gap: var(--space-4);">
+        <p style="font-family: var(--font-complement); font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: 0;">
+          Ce lien permet à d'autres personnes de voir et télécharger ce logo sans se connecter.
+        </p>
 
-      <div class="flex space-x-3">
+        <div style="position: relative;">
+          <input
+            type="text"
+            id="share-url"
+            class="input"
+            style="width: 100%; padding-right: 100px;"
+            readonly
+          >
+          <button
+            type="button"
+            id="copy-btn"
+            class="btn btn-primary btn-sm"
+            onclick="copyToClipboard()"
+            style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); gap: 4px;"
+          >
+            Copier
+          </button>
+        </div>
+
+        <p id="copy-success" style="display: none; font-size: var(--text-sm); color: var(--color-success); font-family: var(--font-principale); font-weight: 600; margin-bottom: 0;">
+          ✓ Lien copié !
+        </p>
+
+        <div style="display: flex; gap: var(--space-3);">
+          <button
+            type="button"
+            class="btn btn-outline"
+            style="flex: 1;"
+            onclick="closeShareModal()"
+          >
+            Fermer
+          </button>
+          <button
+            type="button"
+            id="share-open-btn"
+            class="btn btn-primary"
+            style="flex: 1;"
+            onclick="openShareURL()"
+          >
+            Ouvrir
+          </button>
+        </div>
+      </div>
+
+      <div id="share-error" style="display: none; text-align: center; padding: var(--space-8);">
+        <svg style="width: 48px; height: 48px; color: var(--rdc-rouge); margin: 0 auto var(--space-4);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <p id="share-error-message" style="color: var(--rdc-rouge); font-family: var(--font-principale); font-weight: 600; font-size: var(--text-lg); margin-bottom: 0;"></p>
         <button
           type="button"
-          class="flex-1 btn-outline"
+          class="btn btn-outline"
+          style="width: 100%; margin-top: var(--space-6);"
           onclick="closeShareModal()"
         >
           Fermer
         </button>
-        <button
-          type="button"
-          id="share-open-btn"
-          class="flex-1 btn-primary"
-          onclick="openShareURL()"
-        >
-          Ouvrir
-        </button>
       </div>
-    </div>
-
-    <div id="share-error" class="hidden text-center py-8">
-      <p id="share-error-message" class="text-rdc-rouge font-semibold"></p>
-      <button
-        type="button"
-        class="mt-4 btn-outline w-full"
-        onclick="closeShareModal()"
-      >
-        Fermer
-      </button>
     </div>
   </div>
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div id="delete-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-8">
-    <h3 class="text-xl font-bold text-rdc-noir mb-4">Confirmer la suppression</h3>
-    <p id="delete-message" class="text-gray-700 mb-6"></p>
+<div id="delete-modal" class="modal-overlay" style="display: none;">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 style="margin-bottom: 0;">Confirmer la suppression</h3>
+      <button type="button" onclick="closeDeleteModal()" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0; font-size: var(--text-xl);">
+        ✕
+      </button>
+    </div>
 
-    <div class="flex space-x-4">
-      <button
-        type="button"
-        class="flex-1 btn-outline"
-        onclick="closeDeleteModal()"
-      >
-        Annuler
-      </button>
-      <button
-        type="button"
-        id="confirm-delete-btn"
-        class="flex-1 btn-secondary"
-        onclick="confirmDelete()"
-      >
-        Supprimer
-      </button>
+    <div class="modal-body">
+      <p id="delete-message" style="color: var(--text-primary); margin-bottom: var(--space-6);"></p>
+
+      <div style="display: flex; gap: var(--space-4);">
+        <button
+          type="button"
+          class="btn btn-outline"
+          style="flex: 1;"
+          onclick="closeDeleteModal()"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          id="confirm-delete-btn"
+          class="btn btn-secondary"
+          style="flex: 1;"
+          onclick="confirmDelete()"
+        >
+          Supprimer
+        </button>
+      </div>
     </div>
   </div>
 </div>

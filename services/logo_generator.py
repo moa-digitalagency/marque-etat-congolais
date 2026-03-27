@@ -18,17 +18,20 @@ from config.constants import (
 class LogoGeneratorService:
     """Service for generating RDC logos with Pillow"""
 
-    def __init__(self, logo_assets_base_path: str = 'logo_assets'):
+    def __init__(self, logo_assets_base_path: str = None):
         """
         Initialize service with asset paths.
 
         Args:
-            logo_assets_base_path: Base path to logo assets directory
+            logo_assets_base_path: Base path to logo assets directory (defaults to LOGO_ASSETS_PATH)
         """
+        if logo_assets_base_path is None:
+            logo_assets_base_path = LOGO_ASSETS_PATH
+
         self.logo_assets_base = logo_assets_base_path
         self.armoiries_path = os.path.join(logo_assets_base_path, ARMOIRIES_FILE)
         self.ligne_etat_path = os.path.join(logo_assets_base_path, LIGNE_ETAT_FILE)
-        self.font_path = os.path.join(logo_assets_base_path, FONT_FILE)
+        self.font_path = FONT_FILE
 
     def generate_logo(
         self,

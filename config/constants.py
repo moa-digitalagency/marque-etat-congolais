@@ -1,5 +1,7 @@
 # config/constants.py
 
+import os
+
 # Logo generation defaults
 ARMOIRIES_HEIGHT = 624
 SPACING = 85
@@ -12,11 +14,12 @@ TEXT_COLOR = (0, 0, 0, 255)
 MAX_LINES = 5
 MAX_WORDS_PER_LINE = 3
 
-# File paths
-LOGO_ASSETS_PATH = 'logo_assets'
+# File paths (absolute paths from project root)
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOGO_ASSETS_PATH = os.path.join(PROJECT_ROOT, 'statics', 'assets')
 ARMOIRIES_FILE = 'armoiries.png'
 LIGNE_ETAT_FILE = 'ligne_etat.png'
-FONT_FILE = '../font/cooper-hewitt/CooperHewitt-Bold.otf'
+FONT_FILE = os.path.join(PROJECT_ROOT, 'statics', 'font', 'cooper-hewitt', 'CooperHewitt-Bold.otf')
 
 # Supported languages
 SUPPORTED_LANGUAGES = ['fr', 'lingala', 'swahili']
