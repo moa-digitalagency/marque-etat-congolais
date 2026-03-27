@@ -110,6 +110,17 @@ def api_generate():
                 text_color=tuple(template_params.get('text_color', [0, 0, 0, 255]))
             )
 
+            # Generate PNG White (white version)
+            png_white_buffer = logo_generator.generate_logo_white(
+                unit_nom=institution_name,
+                language=language,
+                armoiries_height=template_params.get('armoiries_height'),
+                spacing=template_params.get('spacing'),
+                text_spacing=template_params.get('text_spacing'),
+                font_size=template_params.get('font_size'),
+                line_spacing=template_params.get('line_spacing')
+            )
+
             # Generate JPG
             jpg_buffer = logo_generator.convert_png_to_jpg(png_buffer)
 
@@ -132,6 +143,7 @@ def api_generate():
             institution_name=institution_name,
             language=language,
             file_path_png='',  # Will be set after flush
+            file_path_png_white='',  # Will be set after flush
             file_path_jpg='',  # Will be set after flush
             preview_url=''  # Will be set after flush
         )
@@ -151,6 +163,13 @@ def api_generate():
                 png_buffer.seek(0)
                 f.write(png_buffer.read())
 
+            # Save PNG White
+            png_white_filename = f"{filename_base}_white.png"
+            png_white_path = os.path.join(upload_folder, png_white_filename)
+            with open(png_white_path, 'wb') as f:
+                png_white_buffer.seek(0)
+                f.write(png_white_buffer.read())
+
             # Save JPG
             jpg_filename = f"{filename_base}.jpg"
             jpg_path = os.path.join(upload_folder, jpg_filename)
@@ -160,6 +179,7 @@ def api_generate():
 
             # Update logo with file paths
             logo.file_path_png = png_path
+            logo.file_path_png_white = png_white_path
             logo.file_path_jpg = jpg_path
             logo.preview_url = url_for('public.download', logo_id=logo.id, format='png', _external=False)
 
@@ -179,6 +199,7 @@ def api_generate():
             'logo_id': logo.id,
             'preview_url': url_for('public.download', logo_id=logo.id, format='png', _external=False),
             'png_url': url_for('public.download', logo_id=logo.id, format='png', _external=False),
+            'png_white_url': url_for('public.download', logo_id=logo.id, format='png_white', _external=False),
             'jpg_url': url_for('public.download', logo_id=logo.id, format='jpg', _external=False),
             'created_at': logo.created_at.isoformat()
         }), 200
@@ -292,13 +313,13 @@ def download(logo_id):
     """
     Download logo file.
 
-    Query parameter: format=png|jpg (default: png)
+    Query parameter: format=png|png_white|jpg (default: png)
     """
     try:
         format_type = request.args.get('format', 'png').lower()
 
-        if format_type not in ['png', 'jpg']:
-            return jsonify({'error': 'Format invalide. Utilisez png ou jpg'}), 400
+        if format_type not in ['png', 'png_white', 'jpg']:
+            return jsonify({'error': 'Format invalide. Utilisez png, png_white ou jpg'}), 400
 
         # Get logo
         logo = LogoGeneration.query.get(logo_id)
@@ -309,6 +330,9 @@ def download(logo_id):
         # Determine file path based on format
         if format_type == 'png':
             file_path = logo.file_path_png
+            mimetype = 'image/png'
+        elif format_type == 'png_white':
+            file_path = logo.file_path_png_white
             mimetype = 'image/png'
         else:  # jpg
             file_path = logo.file_path_jpg
@@ -327,11 +351,16 @@ def download(logo_id):
             return jsonify({'error': 'Accès refusé'}), 403
 
         # Send file
+        if format_type == 'png_white':
+            download_name = f"logo_{logo.id}_white.png"
+        else:
+            download_name = f"logo_{logo.id}.{format_type}"
+
         return send_file(
             file_full_path,
             mimetype=mimetype,
             as_attachment=True,
-            download_name=f"logo_{logo.id}.{format_type}"
+            download_name=download_name
         )
 
     except FileNotFoundError as e:

@@ -11,6 +11,7 @@ class LogoGeneration(db.Model):
     institution_name = db.Column(db.String(255), nullable=False)
     language = db.Column(db.String(20), default='fr')
     file_path_png = db.Column(db.String(500))
+    file_path_png_white = db.Column(db.String(500))
     file_path_jpg = db.Column(db.String(500))
     preview_url = db.Column(db.String(500))
     created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
