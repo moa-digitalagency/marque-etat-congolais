@@ -139,8 +139,8 @@
       return;
     }
 
-    // Build download URL - using a data attribute or direct path construction
-    const downloadUrl = `/download/${currentLogoId}/${format}`;
+    // Build download URL with format as query parameter
+    const downloadUrl = `/download/${currentLogoId}?format=${format}`;
 
     const link = document.createElement('a');
     link.href = downloadUrl;
