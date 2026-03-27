@@ -196,10 +196,15 @@
     if (content) content.style.display = 'none';
     if (error) error.style.display = 'none';
 
-    // Set white logo preview
-    const previewImg = document.getElementById('share-preview-white');
+    // Set normal and white logo previews
+    const previewImg = document.getElementById('share-preview');
     if (previewImg) {
-      previewImg.src = `/download/${currentLogoId}?format=png_white`;
+      previewImg.src = `/download/${currentLogoId}?format=png`;
+    }
+
+    const previewWhiteImg = document.getElementById('share-preview-white');
+    if (previewWhiteImg) {
+      previewWhiteImg.src = `/download/${currentLogoId}?format=png_white`;
     }
 
     // Reset copy success message

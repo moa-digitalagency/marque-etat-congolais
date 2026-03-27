@@ -80,6 +80,17 @@
     const copySuccess = document.getElementById('copy-success');
     if (copySuccess) copySuccess.style.display = 'none';
 
+    // Set normal and white logo previews
+    const previewImg = document.getElementById('share-preview');
+    if (previewImg) {
+      previewImg.src = `/download/${logoId}?format=png`;
+    }
+
+    const previewWhiteImg = document.getElementById('share-preview-white');
+    if (previewWhiteImg) {
+      previewWhiteImg.src = `/download/${logoId}?format=png_white`;
+    }
+
     // Create share link via API
     fetch('/api/share', {
       method: 'POST',
