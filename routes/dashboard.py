@@ -160,9 +160,11 @@ def delete_logo(logo_id):
     Returns JSON response: {"success": true, "message": "..."}
     Status code: 200 on success, 403 on unauthorized, 404 on not found.
     """
+    current_app.logger.info(f'DELETE request received for logo {logo_id} from user {current_user.id}')
     try:
         # Get logo record
         logo = LogoGeneration.query.filter_by(id=logo_id, user_id=current_user.id).first()
+        current_app.logger.info(f'Logo found: {logo is not None}')
 
         # Check if logo exists and belongs to current user
         if not logo:
