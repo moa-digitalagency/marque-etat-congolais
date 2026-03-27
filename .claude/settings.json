@@ -44,7 +44,22 @@
       "Bash(/tmp/task15_summary.txt:*)",
       "Bash(/tmp/verify_exports.txt:*)",
       "Bash(__NEW_LINE_555aa1bd9832824f__ cat:*)",
-      "Bash(__NEW_LINE_555aa1bd9832824f__ echo:*)"
+      "Bash(__NEW_LINE_555aa1bd9832824f__ echo:*)",
+      "Bash(chmod +x /Users/moadigitalagency/marque-etat-congolais/main.py)",
+      "Bash(psql --version)",
+      "Bash(brew services:*)",
+      "Read(//usr/local/**)",
+      "Bash(pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/logfile start)",
+      "Bash(export LC_ALL=en_US.UTF-8)",
+      "Bash(export LANG=en_US.UTF-8)",
+      "Bash(psql -U postgres -c \"CREATE USER logo_user WITH PASSWORD ''logo_password123'';\")",
+      "Bash(psql -U moadigitalagency -c \"CREATE USER logo_user WITH PASSWORD ''logo_password123'';\")",
+      "Bash(psql -U logo_user -d logo_generator_db -c \"SELECT 1;\")",
+      "Bash(source venv/bin/activate)",
+      "Bash(/Users/moadigitalagency/marque-etat-congolais/.env:*)",
+      "Bash(ls -la /Users/moadigitalagency/marque-etat-congolais/logo_assets/*.png)",
+      "Bash(curl -s http://localhost:5000/generate)",
+      "Bash(curl -s http://localhost:5000/auth/login)"
     ]
   }
 }

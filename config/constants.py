@@ -16,7 +16,7 @@ MAX_WORDS_PER_LINE = 3
 LOGO_ASSETS_PATH = 'logo_assets'
 ARMOIRIES_FILE = 'armoiries.png'
 LIGNE_ETAT_FILE = 'ligne_etat.png'
-FONT_FILE = 'font/cooper-hewitt/CooperHewitt-Bold.otf'
+FONT_FILE = '../font/cooper-hewitt/CooperHewitt-Bold.otf'
 
 # Supported languages
 SUPPORTED_LANGUAGES = ['fr', 'lingala', 'swahili']

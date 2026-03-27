@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Logo Non Trouvé - Générateur de Logos RDC{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="text-center">
+    <!-- Icon -->
+    <div class="mb-6">
+      <svg class="w-24 h-24 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+    </div>
+
+    <!-- Error Message -->
+    <h1 class="text-4xl font-bold text-rdc-noir mb-2">404 - Non Trouvé</h1>
+    <p class="text-xl text-gray-600 mb-4">
+      Le logo que vous cherchez n'existe pas ou a été supprimé.
+    </p>
+
+    <!-- Description -->
+    <p class="text-gray-500 mb-8 max-w-md mx-auto">
+      Le lien de partage peut être invalide ou le logo peut avoir été supprimé par son propriétaire.
+    </p>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="{{ url_for('index') }}" class="px-6 py-3 bg-rdc-bleu text-white font-bold rounded-lg hover:bg-opacity-90 transition">
+        Accueil
+      </a>
+      <a href="{{ url_for('auth.login') }}" class="px-6 py-3 border-2 border-rdc-bleu text-rdc-bleu font-bold rounded-lg hover:bg-rdc-bleu hover:text-white transition">
+        Se connecter
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

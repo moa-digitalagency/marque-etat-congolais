@@ -2,8 +2,8 @@
 Text splitting algorithm for logo generation.
 
 Splits institution names according to these rules:
-1. First line = first word only
-2. Following lines = max 3 words per line
+1. If 2 words total: split into 2 lines (1 word per line)
+2. If 3+ words: split into at least 3 lines (1 word per line for short names, up to 2 words per line)
 3. Maximum 5 lines total
 4. All text converted to UPPERCASE
 """
@@ -22,11 +22,14 @@ def split_unit_name(nom: str, max_lines: int = 5) -> list:
         Each string is UPPERCASE
 
     Examples:
-        >>> split_unit_name("Ambassade de France")
-        ['AMBASSADE', 'DE FRANCE']
+        >>> split_unit_name("Ministère de Santé")
+        ['MINISTÈRE', 'DE SANTÉ']
 
-        >>> split_unit_name("Ambassade de la RDC en France")
-        ['AMBASSADE', 'DE LA RDC', 'EN FRANCE']
+        >>> split_unit_name("Ministère de l'économie numérique")
+        ['MINISTÈRE', 'DE L'ÉCONOMIE', 'NUMÉRIQUE']
+
+        >>> split_unit_name("Ambassade de la République Démocratique du Congo")
+        ['AMBASSADE', 'DE LA', 'RÉPUBLIQUE', 'DÉMOCRATIQUE DU', 'CONGO']
     """
     # Validate input
     if not nom or not nom.strip():
@@ -39,16 +42,26 @@ def split_unit_name(nom: str, max_lines: int = 5) -> list:
     if not words:
         return []
 
-    # Start with first word on first line
+    word_count = len(words)
+
+    # If only 1 word, return as is
+    if word_count == 1:
+        return words
+
+    # If 2 words total: put 1 word per line
+    if word_count == 2:
+        return words[:max_lines]
+
+    # If 3+ words: distribute across lines
+    # First word on line 1, then max 2 words per subsequent line
     lines = [words[0]]
     current_line_words = []
 
-    # Process remaining words
     for word in words[1:]:
         current_line_words.append(word)
 
-        # If we've reached 3 words, commit this line
-        if len(current_line_words) == 3:
+        # Commit line when we have 2 words, or on last word
+        if len(current_line_words) == 2:
             lines.append(' '.join(current_line_words))
             current_line_words = []
 
@@ -60,5 +73,4 @@ def split_unit_name(nom: str, max_lines: int = 5) -> list:
     if current_line_words and len(lines) < max_lines:
         lines.append(' '.join(current_line_words))
 
-    # Return first max_lines entries
     return lines[:max_lines]

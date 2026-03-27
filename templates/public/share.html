@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}{{ logo.institution_name }} - Logo Partagé - Générateur de Logos RDC{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12">
+  <!-- Header -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-rdc-noir mb-2">
+      {{ logo.institution_name }}
+    </h1>
+    <p class="text-gray-600">Logo généré avec le Générateur de Logos de la RDC</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Logo Display (66%) -->
+    <div class="lg:col-span-2">
+      <!-- Logo Card -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <!-- Preview Container -->
+        <div class="flex items-center justify-center min-h-96 bg-gray-50 p-8">
+          {% if logo.preview_url %}
+            <img
+              src="{{ logo.preview_url }}"
+              alt="Logo: {{ logo.institution_name }}"
+              class="max-h-96 max-w-full object-contain"
+            >
+          {% else %}
+            <div class="text-center">
+              <svg class="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <p class="text-gray-500 font-medium">Aperçu non disponible</p>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Download Buttons -->
+        <div class="bg-gray-50 border-t border-gray-200 p-6">
+          <h3 class="text-lg font-bold text-rdc-noir mb-4">Télécharger</h3>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a
+              href="{{ png_url }}"
+              download="logo_{{ logo.institution_name|replace(' ', '_') }}.png"
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3 bg-rdc-bleu text-white font-bold rounded-lg hover:bg-opacity-90 transition"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              <span>Télécharger PNG</span>
+            </a>
+
+            <a
+              href="{{ jpg_url }}"
+              download="logo_{{ logo.institution_name|replace(' ', '_') }}.jpg"
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3 border-2 border-rdc-bleu text-rdc-bleu font-bold rounded-lg hover:bg-rdc-bleu hover:text-white transition"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              <span>Télécharger JPG</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Details (33%) -->
+    <div>
+      <!-- Details Card -->
+      <div class="bg-white rounded-lg shadow-md p-6 sticky top-8">
+        <h3 class="text-lg font-bold text-rdc-noir mb-6">Détails du Logo</h3>
+
+        <div class="space-y-4">
+          <!-- Institution Name -->
+          <div>
+            <label class="text-xs font-semibold text-gray-600 uppercase">Institution</label>
+            <p class="text-lg font-bold text-rdc-noir mt-1">{{ logo.institution_name }}</p>
+          </div>
+
+          <!-- Template -->
+          <div>
+            <label class="text-xs font-semibold text-gray-600 uppercase">Modèle</label>
+            <p class="text-lg font-bold text-rdc-noir mt-1">
+              {% if logo.template %}
+                {{ logo.template.name }}
+              {% else %}
+                Modèle supprimé
+              {% endif %}
+            </p>
+          </div>
+
+          <!-- Language -->
+          <div>
+            <label class="text-xs font-semibold text-gray-600 uppercase">Langue</label>
+            <div class="flex items-center space-x-2 mt-1">
+              <svg class="w-5 h-5 text-rdc-bleu" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5 9V7a1 1 0 011-1h8a1 1 0 011 1v2M5 9c0 1.657-4 4-4 4s4 2.343 4 4v2a1 1 0 001 1h8a1 1 0 001-1v-2c0-1.657 4-2.343 4-4M5 9h10"></path>
+              </svg>
+              <span class="font-bold text-rdc-noir">
+                {% if logo.language == 'fr' %}
+                  Français
+                {% elif logo.language == 'lingala' %}
+                  Lingala
+                {% elif logo.language == 'swahili' %}
+                  Swahili
+                {% else %}
+                  {{ logo.language }}
+                {% endif %}
+              </span>
+            </div>
+          </div>
+
+          <!-- Creation Date -->
+          <div>
+            <label class="text-xs font-semibold text-gray-600 uppercase">Date de création</label>
+            <div class="flex items-center space-x-2 mt-1">
+              <svg class="w-5 h-5 text-rdc-rouge" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h12a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="font-bold text-rdc-noir">
+                {{ logo.created_at.strftime('%d %B %Y') }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="mt-6 p-4 bg-blue-50 border-l-4 border-rdc-bleu rounded">
+          <p class="text-xs text-gray-700">
+            <strong>Info :</strong> Ce logo est partagé publiquement. Vous pouvez le télécharger sans créer de compte.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Note -->
+  <div class="mt-16 text-center text-gray-600 text-sm">
+    <p>Généré avec le Générateur de Logos Officiels - République Démocratique du Congo</p>
+  </div>
+</div>
+{% endblock %}

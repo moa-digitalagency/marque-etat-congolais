@@ -15,11 +15,11 @@ def test_split_two_words():
 
 
 def test_split_long_name():
-    """Test with long name (should split with 3 words max per line after first)"""
+    """Test with long name (should split with up to 2 words per line)"""
     result = split_unit_name("Ambassade de la République Démocratique du Congo en France")
     assert len(result) <= 5
     assert result[0] == "AMBASSADE"
-    assert "DE" in result[1]
+    assert "DE LA" in result[1]
 
 
 def test_split_max_lines():

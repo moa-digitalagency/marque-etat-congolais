@@ -3,174 +3,189 @@
 {% block title %}Générer un Logo - Générateur de Logos RDC{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-  <!-- Left Column: Logo Preview (66%) -->
-  <div class="lg:col-span-2">
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-      <!-- Preview Header -->
-      <div class="bg-gradient-to-r from-rdc-bleu to-rdc-noir p-6 text-white">
-        <h2 class="text-2xl font-bold">Aperçu du Logo</h2>
-        <p class="text-blue-100 text-sm mt-1">Votre logo généré s'affichera ci-dessous</p>
-      </div>
+<div class="max-w-7xl mx-auto px-var(--space-4) py-var(--space-8)">
+  <!-- Page Header -->
+  <div class="mb-var(--space-12)">
+    <h1 class="text-5xl font-bold font-principale text-rdc-noir mb-4">Générateur de Logos RDC</h1>
+    <p class="text-lg text-text-secondary font-complement">Créez des logos officiels selon la Charte Graphique du Gouvernement de la RDC</p>
+  </div>
 
-      <!-- Preview Container -->
-      <div id="preview-container" class="flex items-center justify-center min-h-96 bg-gray-100 p-8 relative">
-        <div id="preview-loading" class="text-center">
-          <svg class="w-16 h-16 text-rdc-bleu mx-auto mb-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <p class="text-gray-600 font-semibold">Remplissez le formulaire et cliquez sur "Générer"</p>
+  <!-- Main Layout: 2 columns (66% / 33%) -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Logo Preview (66%) -->
+    <div class="lg:col-span-2">
+      <div class="card">
+        <!-- Preview Header with gradient -->
+        <div class="bg-gradient-to-r from-rdc-bleu to-rdc-bleu-fonce rounded-lg p-8 mb-8 text-white">
+          <h2 class="text-4xl font-bold font-principale mb-2">Aperçu du Logo</h2>
+          <p class="text-opacity-90 text-white">Votre logo généré s'affichera ci-dessous</p>
         </div>
 
-        <div id="preview-error" class="text-center hidden">
-          <svg class="w-16 h-16 text-rdc-rouge mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <p id="error-message" class="text-rdc-rouge font-semibold mt-4"></p>
+        <!-- Preview Container -->
+        <div id="preview-container" class="flex items-center justify-center min-h-[500px] bg-app rounded-lg p-8 relative border-2 border-dashed border-border-soft">
+          <!-- Loading State -->
+          <div id="preview-loading" class="text-center">
+            <svg class="w-20 h-20 text-rdc-bleu mx-auto mb-6 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p class="text-text-secondary font-principale font-600 text-lg">Remplissez le formulaire et cliquez sur "Générer"</p>
+          </div>
+
+          <!-- Error State -->
+          <div id="preview-error" class="text-center hidden">
+            <svg class="w-20 h-20 text-rdc-rouge mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p id="error-message" class="text-rdc-rouge font-principale font-600 mt-4 text-lg"></p>
+          </div>
+
+          <!-- Logo Image -->
+          <img id="preview-image" src="" alt="Logo preview" class="max-h-[400px] max-w-full hidden object-contain" />
         </div>
 
-        <img id="preview-image" src="" alt="Logo preview" class="max-h-96 max-w-full hidden" />
-      </div>
+        <!-- Download Section -->
+        <div id="download-section" class="hidden mt-8 pt-8 border-t border-border-medium">
+          <h3 class="text-2xl font-bold font-principale text-rdc-noir mb-6">Télécharger le Logo</h3>
+          <div class="flex flex-wrap gap-4">
+            <button
+              type="button"
+              id="download-png-btn"
+              class="btn btn-primary flex items-center gap-2"
+              onclick="downloadLogo('png')"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              <span>PNG (Transparent)</span>
+            </button>
 
-      <!-- Download Buttons -->
-      <div id="download-section" class="hidden bg-gray-50 border-t border-gray-200 p-6">
-        <h3 class="text-lg font-bold text-rdc-noir mb-4">Télécharger le Logo</h3>
-        <div class="flex flex-wrap gap-4">
-          <button
-            type="button"
-            id="download-png-btn"
-            class="btn-primary flex items-center space-x-2"
-            onclick="downloadLogo('png')"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-            </svg>
-            <span>PNG</span>
-          </button>
+            <button
+              type="button"
+              id="download-jpg-btn"
+              class="btn btn-secondary flex items-center gap-2"
+              onclick="downloadLogo('jpg')"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              <span>JPG (Fond Blanc)</span>
+            </button>
 
-          <button
-            type="button"
-            id="download-jpg-btn"
-            class="btn-outline"
-            onclick="downloadLogo('jpg')"
-          >
-            <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-            </svg>
-            JPG
-          </button>
-
-          <button
-            type="button"
-            id="share-btn"
-            class="btn-secondary flex items-center space-x-2"
-            onclick="shareLogo()"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C9.589 12.938 10 12.049 10 11c0-1.657-1.343-3-3-3s-3 1.343-3 3 1.343 3 3 3c.981 0 1.85-.353 2.53-.92l6.86 3.83c.15.84.75 1.54 1.53 1.84m0 0a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-            <span>Partager</span>
-          </button>
+            <button
+              type="button"
+              id="share-btn"
+              class="btn btn-outline flex items-center gap-2"
+              onclick="shareLogo()"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C9.589 12.938 10 12.049 10 11c0-1.657-1.343-3-3-3s-3 1.343-3 3 1.343 3 3 3c.981 0 1.85-.353 2.53-.92l6.86 3.83c.15.84.75 1.54 1.53 1.84m0 0a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span>Partager</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Right Column: Generation Form (33%) -->
-  <div class="lg:col-span-1">
-    <div class="bg-white rounded-lg shadow-md p-8 sticky top-8">
-      <h2 class="text-2xl font-bold text-rdc-noir mb-6">Générer un Logo</h2>
+    <!-- Right Column: Generation Form (33%) -->
+    <div class="lg:col-span-1">
+      <div class="card sticky top-8">
+        <h2 class="text-3xl font-bold font-principale text-rdc-noir mb-8">Générer</h2>
 
-      <form id="generate-form" class="space-y-5">
-        <!-- CSRF Token -->
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <form id="generate-form" class="space-y-6">
+          <!-- CSRF Token -->
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-        <!-- Template Selector -->
-        <div>
-          <label for="template_id" class="block text-sm font-semibold text-rdc-noir mb-2">
-            Modèle <span class="text-rdc-rouge">*</span>
-          </label>
-          <select
-            id="template_id"
-            name="template_id"
-            required
-            class="input-field"
+          <!-- Template Selector -->
+          <div>
+            <label for="template_id" class="form-label">
+              Modèle <span class="text-rdc-rouge">*</span>
+            </label>
+            <select
+              id="template_id"
+              name="template_id"
+              required
+              class="input select"
+            >
+              <option value="">Choisir un modèle...</option>
+              {% for template in templates %}
+                <option value="{{ template.id }}">
+                  {{ template.name }}
+                  {% if template.description %} - {{ template.description }}{% endif %}
+                </option>
+              {% endfor %}
+            </select>
+            <p class="form-hint">Sélectionnez le type d'institution</p>
+          </div>
+
+          <!-- Institution Name -->
+          <div>
+            <label for="institution_name" class="form-label">
+              Nom de l'Institution <span class="text-rdc-rouge">*</span>
+            </label>
+            <input
+              type="text"
+              id="institution_name"
+              name="institution_name"
+              required
+              maxlength="255"
+              class="input"
+              placeholder="Ex: Ministère de l'Économie Numérique"
+              oninput="checkFormValidity()"
+            >
+            <p class="form-hint">Le nom s'affichera sur le logo</p>
+          </div>
+
+          <!-- Language Selector -->
+          <div>
+            <label for="language" class="form-label">
+              Langue <span class="text-rdc-rouge">*</span>
+            </label>
+            <select
+              id="language"
+              name="language"
+              required
+              class="input select"
+              onchange="checkFormValidity()"
+            >
+              <option value="fr">🇨🇩 Français</option>
+              <option value="lingala">🗣️ Lingala</option>
+              <option value="swahili">🗣️ Swahili</option>
+            </select>
+          </div>
+
+          <!-- Generate Button -->
+          <button
+            type="submit"
+            id="generate-btn"
+            class="btn btn-primary w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            disabled
           >
-            <option value="">Choisir un modèle...</option>
-            {% for template in templates %}
-              <option value="{{ template.id }}">
-                {{ template.name }}
-                {% if template.description %} - {{ template.description }}{% endif %}
-              </option>
-            {% endfor %}
-          </select>
-          <p class="text-xs text-gray-500 mt-1">Sélectionnez le modèle de logo</p>
-        </div>
+            <svg id="generate-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            <span id="generate-text">Générer</span>
+          </button>
 
-        <!-- Institution Name -->
-        <div>
-          <label for="institution_name" class="block text-sm font-semibold text-rdc-noir mb-2">
-            Nom de l'Institution <span class="text-rdc-rouge">*</span>
-          </label>
-          <input
-            type="text"
-            id="institution_name"
-            name="institution_name"
-            required
-            maxlength="255"
-            class="input-field"
-            placeholder="Ex: Ministère de l'Éducation"
-            oninput="checkFormValidity()"
-          >
-          <p class="text-xs text-gray-500 mt-1">Le nom s'affichera sur le logo</p>
-        </div>
+          <!-- Loading Indicator -->
+          <div id="loading-indicator" class="hidden text-center py-4">
+            <svg class="w-8 h-8 text-rdc-bleu mx-auto animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p class="text-sm text-text-secondary mt-3">Génération en cours...</p>
+          </div>
+        </form>
 
-        <!-- Language Selector -->
-        <div>
-          <label for="language" class="block text-sm font-semibold text-rdc-noir mb-2">
-            Langue <span class="text-rdc-rouge">*</span>
-          </label>
-          <select
-            id="language"
-            name="language"
-            required
-            class="input-field"
-            onchange="checkFormValidity()"
-          >
-            <option value="fr">Français</option>
-            <option value="lingala">Lingala</option>
-            <option value="swahili">Swahili</option>
-          </select>
-        </div>
-
-        <!-- Generate Button -->
-        <button
-          type="submit"
-          id="generate-btn"
-          class="w-full btn-primary flex items-center justify-center space-x-2"
-          disabled
-        >
-          <svg id="generate-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        <!-- Info Alert -->
+        <div class="alert alert-info mt-8">
+          <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
           </svg>
-          <span id="generate-text">Générer</span>
-        </button>
-
-        <!-- Loading Indicator -->
-        <div id="loading-indicator" class="hidden text-center py-3">
-          <svg class="w-6 h-6 text-rdc-bleu mx-auto animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <p class="text-sm text-gray-600 mt-2">Génération en cours...</p>
+          <div>
+            <h4 class="font-principale font-600 text-sm">💡 Conseil</h4>
+            <p class="text-sm mt-1">Vous pouvez générer plusieurs variantes en changeant le modèle, le nom ou la langue.</p>
+          </div>
         </div>
-      </form>
-
-      <!-- Info Box -->
-      <div class="mt-8 p-4 bg-blue-50 border-l-4 border-rdc-bleu rounded">
-        <h4 class="text-sm font-bold text-rdc-bleu mb-2">💡 Conseil</h4>
-        <p class="text-xs text-gray-700">
-          Vous pouvez générer plusieurs variantes du logo en changeant le modèle ou la langue.
-        </p>
       </div>
     </div>
   </div>
@@ -179,17 +194,30 @@
 <!-- Share Modal -->
 <div id="share-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
   <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-8">
-    <h3 class="text-xl font-bold text-rdc-noir mb-4">Partager le Logo</h3>
-
-    <div id="share-loading" class="hidden text-center py-8">
-      <svg class="w-8 h-8 text-rdc-bleu mx-auto animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-      </svg>
-      <p class="text-gray-600 mt-4">Création du lien de partage...</p>
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-2xl font-bold font-principale text-rdc-noir">Partager le Logo</h3>
+      <button
+        type="button"
+        onclick="closeShareModal()"
+        class="text-text-muted hover:text-text-primary transition"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
 
+    <!-- Loading State -->
+    <div id="share-loading" class="hidden text-center py-8">
+      <svg class="w-10 h-10 text-rdc-bleu mx-auto animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <p class="text-text-secondary mt-4">Création du lien de partage...</p>
+    </div>
+
+    <!-- Success State -->
     <div id="share-content" class="hidden space-y-4">
-      <p class="text-sm text-gray-700">
+      <p class="text-sm text-text-secondary font-complement">
         Ce lien permet à d'autres personnes de voir et télécharger ce logo sans se connecter.
       </p>
 
@@ -197,27 +225,30 @@
         <input
           type="text"
           id="share-url"
-          class="input-field"
+          class="input"
           readonly
         >
         <button
           type="button"
           id="copy-btn"
-          class="absolute right-2 top-2 px-3 py-1 bg-rdc-bleu text-white text-sm rounded hover:bg-opacity-90 transition"
+          class="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-rdc-bleu text-white text-xs font-principale font-600 rounded-md hover:bg-opacity-90 transition"
           onclick="copyToClipboard()"
         >
           Copier
         </button>
       </div>
 
-      <p id="copy-success" class="hidden text-sm text-green-600 font-semibold">
-        ✓ Lien copié dans le presse-papiers!
+      <p id="copy-success" class="hidden text-sm text-color-success font-principale font-600 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        Lien copié !
       </p>
 
-      <div class="flex space-x-3">
+      <div class="flex gap-3 pt-4">
         <button
           type="button"
-          class="flex-1 btn-outline"
+          class="flex-1 btn btn-outline"
           onclick="closeShareModal()"
         >
           Fermer
@@ -225,7 +256,7 @@
         <button
           type="button"
           id="share-open-btn"
-          class="flex-1 btn-primary"
+          class="flex-1 btn btn-primary"
           onclick="openShareURL()"
         >
           Ouvrir
@@ -233,11 +264,15 @@
       </div>
     </div>
 
+    <!-- Error State -->
     <div id="share-error" class="hidden text-center py-8">
-      <p id="share-error-message" class="text-rdc-rouge font-semibold"></p>
+      <svg class="w-12 h-12 text-rdc-rouge mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <p id="share-error-message" class="text-rdc-rouge font-principale font-600 text-lg mb-6"></p>
       <button
         type="button"
-        class="mt-4 btn-outline w-full"
+        class="btn btn-outline w-full"
         onclick="closeShareModal()"
       >
         Fermer
@@ -245,6 +280,43 @@
     </div>
   </div>
 </div>
+
+<style>
+  /* Ensure design system variables work */
+  :root {
+    --bg-app: #F8FAFC;
+    --text-secondary: #4B5563;
+    --text-primary: #111827;
+    --text-muted: #9CA3AF;
+    --border-soft: rgba(0,0,0,0.06);
+    --border-medium: rgba(0,0,0,0.12);
+    --space-4: 1rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+  }
+
+  #generate-form {
+    background: var(--bg-white);
+  }
+
+  .input.select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 1024px) {
+    .card.sticky {
+      position: static;
+    }
+  }
+</style>
 
 {% endblock %}
 

@@ -106,17 +106,38 @@ def init_database():
         db.session.commit()
         print("✅ Templates seeded successfully\n")
 
+        # Create admin user from environment variables
+        print("🔐 Setting up admin user...")
+        admin_email = os.environ.get('ADMIN_EMAIL')
+        admin_password = os.environ.get('ADMIN_PASSWORD')
+        admin_name = os.environ.get('ADMIN_FULL_NAME', 'Administrator')
+
+        if admin_email and admin_password:
+            existing_admin = User.query.filter_by(email=admin_email).first()
+            if not existing_admin:
+                from services import AuthService
+                admin = AuthService.create_admin_user(
+                    email=admin_email,
+                    password=admin_password,
+                    full_name=admin_name
+                )
+                db.session.commit()
+                print(f"  ✓ Created admin user: {admin_email}")
+            else:
+                print(f"  ℹ Admin user already exists: {admin_email}")
+        else:
+            print("  ℹ ADMIN_EMAIL and ADMIN_PASSWORD not set in environment")
+
         # Print summary
         user_count = User.query.count()
         template_count = Template.query.count()
 
-        print("📊 Database Summary:")
+        print("\n📊 Database Summary:")
         print(f"  Users: {user_count}")
         print(f"  Templates: {template_count}")
         print("\n🚀 Database initialized successfully!")
         print("\nNext steps:")
-        print("  1. Create admin user: python create_admin.py")
-        print("  2. Run Flask app: python app.py")
+        print("  1. Run Flask app: python main.py")
 
 if __name__ == '__main__':
     init_database()

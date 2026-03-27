@@ -1,9 +1,7 @@
 # models/template.py
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
-
-db = SQLAlchemy()
+from models.database import db
 
 class Template(db.Model):
     __tablename__ = 'template'
