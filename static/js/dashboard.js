@@ -243,6 +243,12 @@
 
         closeDeleteModal();
 
+        // Reset button state
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Supprimer';
+        }
+
         // Show success message
         const message = document.createElement('div');
         message.style.cssText = 'background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px 20px; border-radius: 4px; margin-bottom: 16px;';
