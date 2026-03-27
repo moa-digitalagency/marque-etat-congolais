@@ -7,170 +7,371 @@
 
   <title>{% block title %}Générateur de Logos - RDC{% endblock %}</title>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Custom colors for design system -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'rdc-bleu': '#0095C9',
-            'rdc-rouge': '#DB3832',
-            'rdc-jaune': '#FFF24B',
-            'rdc-noir': '#323230',
-          },
-          spacing: {
-            'module': '110px',
-            'section': '220px',
-          },
-          fontFamily: {
-            'inter': ['Inter', 'sans-serif'],
-            'cooper': ['Cooper Hewitt', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Design System CSS -->
+  <!-- Design System CSS (Complete) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
 
-  <!-- Custom styles -->
   <style>
+    /* Base HTML Structure */
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-ui);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      color: var(--text-primary);
+      background-color: var(--bg-app);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Typography */
     h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-principale);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: var(--space-4);
+      color: var(--text-primary);
+    }
+
+    h1 { font-size: var(--text-5xl); }
+    h2 { font-size: var(--text-4xl); }
+    h3 { font-size: var(--text-3xl); }
+    h4 { font-size: var(--text-2xl); }
+    h5 { font-size: var(--text-xl); }
+    h6 { font-size: var(--text-lg); }
+
+    p {
+      margin-bottom: var(--space-4);
+      color: var(--text-primary);
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color var(--transition-normal);
+    }
+
+    a:hover {
+      color: var(--primary-dark);
+    }
+
+    /* Page Layout */
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    .page-container {
+      max-width: 1920px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Navigation Bar */
+    nav {
+      background-color: var(--bg-white);
+      border-bottom: 1px solid var(--border-soft);
+      box-shadow: var(--elevation-1);
+    }
+
+    nav > div {
+      max-width: 1920px;
+      margin: 0 auto;
+      padding: var(--space-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: var(--header-h);
+    }
+
+    /* Logo/Branding */
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .logo-badge {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-inverse);
+      font-weight: 700;
+      font-size: var(--text-lg);
+      box-shadow: var(--elevation-2);
+    }
+
+    .logo-text {
+      font-family: var(--font-principale);
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Navigation Links */
+    .nav-container {
+      display: flex;
+      gap: var(--space-8);
+      align-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: var(--space-8);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    /* User Menu */
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .menu-dropdown {
+      position: relative;
+    }
+
+    .dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-principale);
+      font-size: var(--text-sm);
       font-weight: 600;
+      cursor: pointer;
+      padding: var(--space-2) var(--space-3);
+      transition: color var(--transition-normal);
     }
 
-    .btn-primary {
-      @apply px-6 py-3 bg-rdc-bleu text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all;
+    .dropdown-toggle:hover {
+      color: var(--primary);
     }
 
-    .btn-secondary {
-      @apply px-6 py-3 bg-rdc-rouge text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all;
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: var(--space-2);
+      background: var(--bg-white);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--elevation-3);
+      min-width: 200px;
+      z-index: var(--z-dropdown);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all var(--transition-normal);
     }
 
-    .btn-outline {
-      @apply px-6 py-3 border-2 border-rdc-bleu text-rdc-bleu font-semibold rounded-lg hover:bg-rdc-bleu hover:text-white transition-all;
+    .menu-dropdown:hover .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
 
-    .input-field {
-      @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-rdc-bleu focus:outline-none transition-colors;
+    .dropdown-menu a {
+      display: block;
+      padding: var(--space-3) var(--space-4);
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: background-color var(--transition-fast);
     }
 
-    .flash-error {
-      @apply p-4 mb-4 bg-red-100 border-l-4 border-rdc-rouge text-rdc-rouge rounded;
+    .dropdown-menu a:first-child {
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     }
 
-    .flash-success {
-      @apply p-4 mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded;
+    .dropdown-menu a:last-child {
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      border-top: 1px solid var(--border-soft);
     }
 
-    .flash-info {
-      @apply p-4 mb-4 bg-blue-100 border-l-4 border-rdc-bleu text-rdc-bleu rounded;
+    .dropdown-menu a:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
     }
 
-    .nav-link {
-      @apply text-gray-700 hover:text-rdc-bleu transition-colors font-medium;
+    /* Flash Messages */
+    .flash-messages {
+      max-width: 1920px;
+      margin: var(--space-6) auto;
+      padding: 0 var(--space-4);
     }
 
-    .nav-link.active {
-      @apply text-rdc-bleu border-b-2 border-rdc-bleu pb-1;
+    /* Main Content */
+    main {
+      max-width: 1920px;
+      margin: 0 auto;
+      width: 100%;
+      padding: var(--space-8) var(--space-4);
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--rdc-noir);
+      color: var(--text-inverse);
+      border-top: 4px solid var(--rdc-bleu);
+      margin-top: var(--section);
+    }
+
+    footer .container {
+      max-width: 1920px;
+      margin: 0 auto;
+      padding: var(--space-8) var(--space-4);
+    }
+
+    footer h3, footer h4 {
+      color: var(--text-inverse);
+      margin-bottom: var(--space-4);
+    }
+
+    footer p, footer a {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: var(--text-sm);
+    }
+
+    footer a:hover {
+      color: var(--rdc-bleu);
+    }
+
+    footer .divider {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: var(--space-8);
+      padding-top: var(--space-8);
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: var(--text-sm);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      nav > div {
+        padding: var(--space-4) var(--space-3);
+      }
+
+      main {
+        padding: var(--space-6) var(--space-3);
+      }
+
+      footer .container {
+        padding: var(--space-6) var(--space-3);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .logo-text {
+        display: none;
+      }
+
+      h1 { font-size: var(--text-4xl); }
+      h2 { font-size: var(--text-3xl); }
+      h3 { font-size: var(--text-2xl); }
     }
   </style>
 
   {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-50">
+
+<body>
   <!-- Navigation Bar -->
-  <nav class="bg-white shadow-sm border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <!-- Logo/Branding -->
-        <div class="flex items-center">
-          <a href="{{ url_for('index') if 'index' in config.get('APPLICATION_ROOT', '') else '/' }}" class="flex items-center">
-            <div class="w-10 h-10 bg-rdc-bleu rounded-full flex items-center justify-center mr-3">
-              <span class="text-white font-bold text-lg">RDC</span>
-            </div>
-            <span class="text-xl font-bold text-rdc-noir hidden sm:inline">Générateur de Logos</span>
-          </a>
-        </div>
+  <nav>
+    <div class="page-container" style="padding: var(--space-4);">
+      <!-- Left: Logo -->
+      <a href="/" class="logo-section">
+        <div class="logo-badge">RDC</div>
+        <span class="logo-text">Générateur de Logos</span>
+      </a>
 
-        <!-- Center Navigation -->
-        <div class="hidden md:flex space-x-8">
-          <a href="{{ url_for('public.generate') if current_user.is_authenticated else '#' }}"
-             class="nav-link {% if 'generate' in request.path %}active{% endif %}"
-             {% if not current_user.is_authenticated %}onclick="return false;" style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
-            Générer
-          </a>
-          <a href="{{ url_for('dashboard.index') if current_user.is_authenticated else '#' }}"
-             class="nav-link {% if 'dashboard' in request.path %}active{% endif %}"
-             {% if not current_user.is_authenticated %}onclick="return false;" style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
-            Historique
-          </a>
-        </div>
-
-        <!-- User Menu -->
-        <div class="flex items-center space-x-4">
+      <!-- Center: Navigation Links -->
+      <div class="nav-container">
+        <div class="nav-links">
           {% if current_user.is_authenticated %}
-            <div class="relative group">
-              <button class="flex items-center space-x-2 text-gray-700 hover:text-rdc-bleu transition-colors">
-                <span class="hidden sm:inline font-medium">{{ current_user.email }}</span>
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </button>
-
-              <!-- Dropdown Menu -->
-              <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                <a href="{{ url_for('auth.profile') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-t-lg first:rounded-t-lg">
-                  Profil
-                </a>
-                <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-b-lg last:rounded-b-lg border-t border-gray-200">
-                  Déconnexion
-                </a>
-              </div>
-            </div>
-          {% else %}
-            <a href="{{ url_for('auth.login') }}" class="nav-link">
-              Connexion
+            <a href="{{ url_for('public.generate') }}" class="nav-link {% if 'generate' in request.path %}active{% endif %}">
+              Générer
             </a>
-            <a href="{{ url_for('auth.register') }}" class="btn-primary text-sm">
-              S'inscrire
+            <a href="{{ url_for('dashboard.index') }}" class="nav-link {% if 'dashboard' in request.path %}active{% endif %}">
+              Historique
             </a>
           {% endif %}
         </div>
+      </div>
+
+      <!-- Right: User Menu -->
+      <div class="user-menu">
+        {% if current_user.is_authenticated %}
+          <div class="menu-dropdown">
+            <button class="dropdown-toggle">
+              <span>{{ current_user.email }}</span>
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <a href="{{ url_for('auth.profile') }}">Profil</a>
+              <a href="{{ url_for('auth.logout') }}">Déconnexion</a>
+            </div>
+          </div>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}" class="nav-link">Connexion</a>
+          <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">S'inscrire</a>
+        {% endif %}
       </div>
     </div>
   </nav>
 
   <!-- Flash Messages -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+  <div class="flash-messages">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
           {% if category == 'error' %}
-            <div class="flash-error" role="alert">
-              <p><strong>Erreur :</strong> {{ message }}</p>
+            <div class="alert alert-error" role="alert">
+              <strong>Erreur :</strong> {{ message }}
             </div>
           {% elif category == 'success' %}
-            <div class="flash-success" role="alert">
-              <p><strong>Succès :</strong> {{ message }}</p>
+            <div class="alert alert-success" role="alert">
+              <strong>Succès :</strong> {{ message }}
             </div>
           {% elif category == 'info' %}
-            <div class="flash-info" role="alert">
-              <p><strong>Info :</strong> {{ message }}</p>
+            <div class="alert alert-info" role="alert">
+              <strong>Info :</strong> {{ message }}
             </div>
           {% else %}
-            <div class="flash-info" role="alert">
-              <p>{{ message }}</p>
+            <div class="alert alert-info" role="alert">
+              {{ message }}
             </div>
           {% endif %}
         {% endfor %}
@@ -179,48 +380,50 @@
   </div>
 
   <!-- Main Content -->
-  <main class="min-h-screen flex-grow">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <main>
+    <div class="page-container">
       {% block content %}{% endblock %}
     </div>
   </main>
 
   <!-- Footer -->
-  <footer class="bg-rdc-noir text-white mt-16 border-t-4 border-rdc-bleu">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  <footer>
+    <div class="container" style="max-width: 1920px; margin: 0 auto; padding: var(--space-8) var(--space-4);">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-8);">
+        <!-- About -->
         <div>
-          <h3 class="text-lg font-bold mb-4">Générateur de Logos</h3>
-          <p class="text-gray-300 text-sm">
-            Outil officiel pour la génération et la gestion des logos des institutions de la République Démocratique du Congo.
-          </p>
+          <h3>Générateur de Logos</h3>
+          <p>Outil officiel pour la génération et la gestion des logos des institutions de la République Démocratique du Congo.</p>
         </div>
 
+        <!-- Navigation -->
         <div>
-          <h4 class="text-lg font-bold mb-4">Navigation</h4>
-          <ul class="space-y-2 text-gray-300 text-sm">
+          <h4>Navigation</h4>
+          <div style="display: flex; flex-direction: column; gap: var(--space-3);">
             {% if current_user.is_authenticated %}
-              <li><a href="{{ url_for('public.generate') }}" class="hover:text-rdc-bleu transition-colors">Générer un logo</a></li>
-              <li><a href="{{ url_for('dashboard.index') }}" class="hover:text-rdc-bleu transition-colors">Mes logos</a></li>
-              <li><a href="{{ url_for('auth.profile') }}" class="hover:text-rdc-bleu transition-colors">Profil</a></li>
+              <a href="{{ url_for('public.generate') }}">Générer un logo</a>
+              <a href="{{ url_for('dashboard.index') }}">Mes logos</a>
+              <a href="{{ url_for('auth.profile') }}">Profil</a>
             {% else %}
-              <li><a href="{{ url_for('auth.login') }}" class="hover:text-rdc-bleu transition-colors">Connexion</a></li>
-              <li><a href="{{ url_for('auth.register') }}" class="hover:text-rdc-bleu transition-colors">Inscription</a></li>
+              <a href="{{ url_for('auth.login') }}">Connexion</a>
+              <a href="{{ url_for('auth.register') }}">Inscription</a>
             {% endif %}
-          </ul>
+          </div>
         </div>
 
+        <!-- Information -->
         <div>
-          <h4 class="text-lg font-bold mb-4">Informations</h4>
-          <ul class="space-y-2 text-gray-300 text-sm">
-            <li><a href="#" class="hover:text-rdc-bleu transition-colors">À propos</a></li>
-            <li><a href="#" class="hover:text-rdc-bleu transition-colors">Contactez-nous</a></li>
-            <li><a href="#" class="hover:text-rdc-bleu transition-colors">Conditions d'utilisation</a></li>
-          </ul>
+          <h4>Informations</h4>
+          <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+            <a href="#">À propos</a>
+            <a href="#">Contactez-nous</a>
+            <a href="#">Conditions d'utilisation</a>
+          </div>
         </div>
       </div>
 
-      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300 text-sm">
+      <!-- Copyright -->
+      <div class="divider">
         <p>&copy; 2024 République Démocratique du Congo. Tous droits réservés.</p>
       </div>
     </div>
