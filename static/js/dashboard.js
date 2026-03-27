@@ -154,15 +154,23 @@
    * @param {string} institutionName - Name of the institution (for display in confirmation)
    */
   function deleteLogo(logoId, institutionName) {
+    console.log('deleteLogo called with logoId:', logoId, 'institutionName:', institutionName);
     currentDeleteLogoId = logoId;
     currentDeleteLogoName = institutionName;
     const modal = document.getElementById('delete-modal');
     const message = document.getElementById('delete-message');
 
+    console.log('Modal element found:', !!modal);
+    console.log('Message element found:', !!message);
+
     if (message) {
       message.textContent = `Êtes-vous sûr de vouloir supprimer le logo de "${institutionName}"? Cette action ne peut pas être annulée.`;
     }
-    if (modal) modal.style.display = 'flex';
+    if (modal) {
+      console.log('Showing modal, current display:', modal.style.display);
+      modal.style.display = 'flex';
+      console.log('Modal display set to:', modal.style.display);
+    }
   }
 
   /**
