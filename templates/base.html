@@ -324,17 +324,17 @@
     {% if current_user.is_authenticated %}
       <div class="sidebar-section">
         <div class="sidebar-section-title">Navigation</div>
-        <a href="{{ url_for('public.generate') }}" class="sidebar-link {% if 'generate' in request.path %}active{% endif %}">
-          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-          </svg>
-          <span>Générer</span>
-        </a>
         <a href="{{ url_for('dashboard.index') }}" class="sidebar-link {% if 'dashboard' in request.path %}active{% endif %}">
           <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
           </svg>
           <span>Tableau de bord</span>
+        </a>
+        <a href="{{ url_for('public.generate') }}" class="sidebar-link {% if 'generate' in request.path %}active{% endif %}">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          <span>Générer</span>
         </a>
       </div>
     {% endif %}
@@ -342,17 +342,23 @@
     <!-- User Menu at Bottom -->
     <div class="user-menu">
       {% if current_user.is_authenticated %}
-        <div class="menu-dropdown">
-          <button class="dropdown-toggle">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- User Profile Section -->
+        <div style="padding: var(--space-4) var(--space-3); border-top: 1px solid var(--border-soft); display: flex; flex-direction: column; gap: var(--space-3);">
+          <!-- User Name Display -->
+          <div style="display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); background-color: var(--primary-light); border-radius: var(--radius-md);">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--primary); flex-shrink: 0;">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
             </svg>
-            <span>{{ current_user.email }}</span>
-          </button>
-          <div class="dropdown-menu">
-            <a href="{{ url_for('auth.profile') }}">Profil</a>
-            <a href="{{ url_for('auth.logout') }}">Déconnexion</a>
+            <span style="font-weight: 600; color: var(--text-primary); word-break: break-word; font-size: var(--text-sm);">{{ current_user.full_name or current_user.email }}</span>
           </div>
+
+          <!-- Action Buttons -->
+          <a href="{{ url_for('auth.profile') }}" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center; text-decoration: none;">
+            Profil
+          </a>
+          <a href="{{ url_for('auth.logout') }}" class="btn btn-outline btn-sm" style="width: 100%; justify-content: center; text-decoration: none;">
+            Déconnexion
+          </a>
         </div>
       {% else %}
         <a href="{{ url_for('auth.login') }}" class="sidebar-link">
@@ -361,7 +367,7 @@
           </svg>
           <span>Connexion</span>
         </a>
-        <a href="{{ url_for('auth.register') }}" class="btn btn-primary" style="width: 100%; text-align: center;">S'inscrire</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary" style="width: 100%; text-align: center; text-decoration: none;">S'inscrire</a>
       {% endif %}
     </div>
   </aside>
@@ -399,49 +405,6 @@
       {% block content %}{% endblock %}
     </div>
   </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container" style="max-width: 1920px; margin: 0 auto; padding: var(--space-8) var(--space-4);">
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-8);">
-        <!-- About -->
-        <div>
-          <h3>Générateur de Logos</h3>
-          <p>Outil officiel pour la génération et la gestion des logos des institutions de la République Démocratique du Congo.</p>
-        </div>
-
-        <!-- Navigation -->
-        <div>
-          <h4>Navigation</h4>
-          <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-            {% if current_user.is_authenticated %}
-              <a href="{{ url_for('public.generate') }}">Générer un logo</a>
-              <a href="{{ url_for('dashboard.index') }}">Mes logos</a>
-              <a href="{{ url_for('auth.profile') }}">Profil</a>
-            {% else %}
-              <a href="{{ url_for('auth.login') }}">Connexion</a>
-              <a href="{{ url_for('auth.register') }}">Inscription</a>
-            {% endif %}
-          </div>
-        </div>
-
-        <!-- Information -->
-        <div>
-          <h4>Informations</h4>
-          <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-            <a href="#">À propos</a>
-            <a href="#">Contactez-nous</a>
-            <a href="#">Conditions d'utilisation</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Copyright -->
-      <div class="divider">
-        <p>&copy; 2024 République Démocratique du Congo. Tous droits réservés.</p>
-      </div>
-    </div>
-  </footer>
 
   <!-- Scripts -->
   {% block scripts %}{% endblock %}
