@@ -192,7 +192,10 @@
    * Makes DELETE request to API
    */
   function confirmDelete() {
-    if (!currentDeleteLogoId) return;
+    if (!currentDeleteLogoId) {
+      console.error('No logo ID to delete');
+      return;
+    }
 
     const button = document.getElementById('confirm-delete-btn');
     if (button) {
@@ -200,15 +203,27 @@
       button.textContent = 'Suppression en cours...';
     }
 
+    console.log(`Deleting logo ${currentDeleteLogoId}...`);
+    const headers = getFetchHeaders(false);
+    console.log('Headers:', headers);
+
     fetch(`/dashboard/${currentDeleteLogoId}`, {
       method: 'DELETE',
-      headers: getFetchHeaders(true)
+      headers: headers
     })
-    .then(response => response.json())
+    .then(response => {
+      console.log('Response status:', response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => {
+      console.log('Delete response:', data);
       if (data.success) {
         // Remove the logo card from DOM with animation
         const card = document.querySelector(`[data-logo-id="${currentDeleteLogoId}"]`);
+        console.log('Card found:', !!card);
         if (card) {
           // Fade out animation
           card.style.transition = 'opacity 0.3s ease-in-out';
@@ -231,6 +246,7 @@
         }
       } else {
         const errorMsg = data.error || 'Impossible de supprimer le logo';
+        console.error('Delete failed:', errorMsg);
         showDeleteError('Erreur: ' + errorMsg);
         if (button) {
           button.disabled = false;
