@@ -143,6 +143,75 @@ body {
 .gap-4 { gap: var(--space-4); }
 .gap-6 { gap: var(--space-6); }
 
+/* Password Strength Indicators */
+.strength-indicator {
+  flex: 1;
+  height: 8px;
+  background-color: var(--border-soft);
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-normal);
+}
+
+.strength-indicator--very-weak {
+  background-color: var(--rdc-rouge);
+}
+
+.strength-indicator--weak {
+  background-color: var(--rdc-orange);
+}
+
+.strength-indicator--medium {
+  background-color: var(--rdc-jaune);
+}
+
+.strength-indicator--strong {
+  background-color: var(--rdc-vert);
+}
+
+.strength-text {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  margin-top: var(--space-2);
+}
+
+.strength-text--empty {
+  color: var(--text-secondary);
+}
+
+.strength-text--weak {
+  color: var(--rdc-rouge);
+  font-weight: 600;
+}
+
+.strength-text--medium {
+  color: var(--rdc-orange);
+  font-weight: 600;
+}
+
+.strength-text--strong {
+  color: var(--rdc-vert);
+  font-weight: 600;
+}
+
+.password-match-feedback {
+  font-size: var(--text-xs);
+  margin-top: var(--space-2);
+}
+
+.password-match-feedback--empty {
+  color: var(--text-secondary);
+}
+
+.password-match-feedback--match {
+  color: var(--rdc-vert);
+  font-weight: 600;
+}
+
+.password-match-feedback--mismatch {
+  color: var(--rdc-rouge);
+  font-weight: 600;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .page-content {
