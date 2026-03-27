@@ -1,8 +1,6 @@
 # models/logo.py
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-
-db = SQLAlchemy()
+from models.database import db
 
 class LogoGeneration(db.Model):
     __tablename__ = 'logo_generation'

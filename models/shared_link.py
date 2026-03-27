@@ -1,9 +1,7 @@
 # models/shared_link.py
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import secrets
-
-db = SQLAlchemy()
+from models.database import db
 
 class SharedLink(db.Model):
     __tablename__ = 'shared_link'

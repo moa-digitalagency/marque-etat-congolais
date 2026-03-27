@@ -5,6 +5,7 @@ Initializes and configures the Flask app with all extensions and blueprints.
 
 from flask import Flask
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 from models import db, User
 from config.settings import get_config
 from services import I18nService
@@ -28,6 +29,7 @@ def create_app(config=None):
 
     # Initialize extensions
     db.init_app(app)
+    csrf = CSRFProtect(app)
 
     # Initialize Flask-Login
     login_manager = LoginManager()
@@ -55,6 +57,15 @@ def create_app(config=None):
     app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
     app.register_blueprint(api_bp, url_prefix='/api')
     app.register_blueprint(admin_bp, url_prefix='/admin')
+
+    # Root route redirect
+    @app.route('/')
+    def root():
+        """Redirect root to login or dashboard"""
+        from flask_login import current_user
+        if current_user.is_authenticated:
+            return __import__('flask').redirect(__import__('flask').url_for('dashboard.index'))
+        return __import__('flask').redirect(__import__('flask').url_for('auth.login'))
 
     # Template filters
     @app.template_filter('t')
