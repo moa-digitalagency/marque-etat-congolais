@@ -60,6 +60,9 @@
       "Bash(ls -la /Users/moadigitalagency/marque-etat-congolais/logo_assets/*.png)",
       "Bash(curl -s http://localhost:5000/generate)",
       "Bash(curl -s http://localhost:5000/auth/login)"
+    ],
+    "additionalDirectories": [
+      "/Users/moadigitalagency/design-system-marque-etat-congolais/css"
     ]
   }
 }
