@@ -5,11 +5,16 @@
 {% block content %}
 <div class="admin-users-page">
   <!-- Page Header -->
-  <div style="margin-bottom: var(--space-8);">
-    <h1>Gestion des utilisateurs</h1>
-    <p style="color: var(--text-secondary); margin-top: var(--space-2);">
-      Total: <strong>{{ total_users }}</strong> utilisateur(s)
-    </p>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8);">
+    <div>
+      <h1>Gestion des utilisateurs</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--space-2);">
+        Total: <strong>{{ total_users }}</strong> utilisateur(s)
+      </p>
+    </div>
+    <button onclick="openCreateUserModal()" class="btn btn-primary" style="white-space: nowrap; padding: var(--space-3) var(--space-6);">
+      + Ajouter utilisateur
+    </button>
   </div>
 
   <!-- Stats Section -->
@@ -146,6 +151,61 @@
   </div>
 </div>
 
+<!-- Create User Modal -->
+<div id="createUserModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; align-items: center; justify-content: center;">
+  <div style="background: white; border-radius: var(--radius-lg); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; padding: var(--space-6); max-height: 90vh; overflow-y: auto;">
+    <!-- Modal Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+      <h2 style="font-size: var(--text-2xl); font-weight: 700;">Créer un nouvel utilisateur</h2>
+      <button onclick="closeCreateUserModal()" style="background: none; border: none; font-size: var(--text-2xl); cursor: pointer; color: var(--text-secondary);">×</button>
+    </div>
+
+    <!-- Modal Form -->
+    <form id="createUserForm" style="display: flex; flex-direction: column; gap: var(--space-4);">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div>
+        <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Email <span style="color: var(--rdc-rouge);">*</span></label>
+        <input type="email" id="createUserEmail" name="email" required style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%;">
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Mot de passe <span style="color: var(--rdc-rouge);">*</span></label>
+        <input type="password" id="createUserPassword" name="password" required style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%;">
+        <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: var(--space-1);">Minimum 6 caractères</p>
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Confirmer le mot de passe <span style="color: var(--rdc-rouge);">*</span></label>
+        <input type="password" id="createUserPasswordConfirm" name="password_confirm" required style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%;">
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Nom Complet</label>
+        <input type="text" id="createUserFullName" name="full_name" style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%;">
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Ministère</label>
+        <input type="text" id="createUserMinistry" name="ministry" style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%;">
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Rôle</label>
+        <select id="createUserRole" name="role" style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%;">
+          <option value="user">Utilisateur</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: var(--space-4); margin-top: var(--space-4);">
+        <button type="button" onclick="closeCreateUserModal()" class="btn btn-outline" style="flex: 1;">Annuler</button>
+        <button type="submit" class="btn btn-primary" style="flex: 1;">Créer utilisateur</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Edit User Modal -->
 <div id="editUserModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; align-items: center; justify-content: center;">
   <div style="background: white; border-radius: var(--radius-lg); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; padding: var(--space-6); max-height: 90vh; overflow-y: auto;">
@@ -214,6 +274,15 @@
 
 <!-- Scripts -->
 <script>
+  function openCreateUserModal() {
+    document.getElementById('createUserForm').reset();
+    document.getElementById('createUserModal').style.display = 'flex';
+  }
+
+  function closeCreateUserModal() {
+    document.getElementById('createUserModal').style.display = 'none';
+  }
+
   function openUserModal(userId, email, fullName, ministry, role, isActive) {
     document.getElementById('userId').value = userId;
     document.getElementById('userEmail').value = email;
@@ -248,14 +317,66 @@
     }
   }
 
-  // Close modal when clicking outside
+  // Close create modal when clicking outside
+  document.getElementById('createUserModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeCreateUserModal();
+    }
+  });
+
+  // Close edit modal when clicking outside
   document.getElementById('editUserModal').addEventListener('click', function(e) {
     if (e.target === this) {
       closeEditUserModal();
     }
   });
 
-  // Handle form submission
+  // Handle create user form submission
+  document.getElementById('createUserForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('createUserEmail').value;
+    const password = document.getElementById('createUserPassword').value;
+    const passwordConfirm = document.getElementById('createUserPasswordConfirm').value;
+    const fullName = document.getElementById('createUserFullName').value;
+    const ministry = document.getElementById('createUserMinistry').value;
+    const role = document.getElementById('createUserRole').value;
+
+    if (password !== passwordConfirm) {
+      alert('Les mots de passe ne correspondent pas');
+      return;
+    }
+
+    if (password.length < 6) {
+      alert('Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+
+    const data = {
+      email: email,
+      password: password,
+      full_name: fullName,
+      ministry: ministry,
+      role: role
+    };
+
+    const response = await fetch('/api/admin/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('input[name="csrf_token"]').value
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      location.reload();
+    } else {
+      const error = await response.json();
+      alert('Erreur: ' + (error.error || 'Erreur lors de la création'));
+    }
+  });
+
+  // Handle edit form submission
   document.getElementById('editUserForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const userId = document.getElementById('userId').value;
