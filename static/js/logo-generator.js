@@ -36,7 +36,7 @@
     const generateText = document.getElementById('generate-text');
 
     if (show) {
-      if (indicator) indicator.classList.remove('hidden');
+      if (indicator) indicator.style.display = 'block';
       if (generateBtn) {
         generateBtn.disabled = true;
       }
@@ -44,7 +44,7 @@
         generateText.textContent = 'Génération...';
       }
     } else {
-      if (indicator) indicator.classList.add('hidden');
+      if (indicator) indicator.style.display = 'none';
       if (generateBtn) {
         generateBtn.disabled = false;
       }
@@ -64,10 +64,10 @@
 
     if (img) {
       img.src = url;
-      img.classList.remove('hidden');
+      img.style.display = 'block';
     }
     if (loading) {
-      loading.classList.add('hidden');
+      loading.style.display = 'none';
     }
   }
 
@@ -79,9 +79,9 @@
     const loading = document.getElementById('preview-loading');
     const error = document.getElementById('preview-error');
 
-    if (img) img.classList.add('hidden');
-    if (error) error.classList.add('hidden');
-    if (loading) loading.classList.remove('hidden');
+    if (img) img.style.display = 'none';
+    if (error) error.style.display = 'none';
+    if (loading) loading.style.display = 'block';
   }
 
   /**
@@ -94,7 +94,7 @@
     const img = document.getElementById('preview-image');
     const loading = document.getElementById('preview-loading');
 
-    if (error) error.classList.remove('hidden');
+    if (error) error.style.display = 'block';
     if (img) img.classList.add('hidden');
     if (loading) loading.classList.add('hidden');
     if (errorMsg) errorMsg.textContent = message;
@@ -105,7 +105,7 @@
    */
   function hideError() {
     const error = document.getElementById('preview-error');
-    if (error) error.classList.add('hidden');
+    if (error) error.style.display = 'none';
   }
 
   /**
@@ -113,7 +113,7 @@
    */
   function showDownloadButtons() {
     const section = document.getElementById('download-section');
-    if (section) section.classList.remove('hidden');
+    if (section) section.style.display = 'block';
   }
 
   /**
@@ -121,7 +121,7 @@
    */
   function hideDownloadButtons() {
     const section = document.getElementById('download-section');
-    if (section) section.classList.add('hidden');
+    if (section) section.style.display = 'none';
   }
 
   /**
@@ -165,14 +165,14 @@
     const content = document.getElementById('share-content');
     const error = document.getElementById('share-error');
 
-    if (modal) modal.classList.remove('hidden');
-    if (loading) loading.classList.remove('hidden');
-    if (content) content.classList.add('hidden');
-    if (error) error.classList.add('hidden');
+    if (modal) modal.style.display = 'flex';
+    if (loading) loading.style.display = 'block';
+    if (content) content.style.display = 'none';
+    if (error) error.style.display = 'none';
 
     // Reset copy success message
     const copySuccess = document.getElementById('copy-success');
-    if (copySuccess) copySuccess.classList.add('hidden');
+    if (copySuccess) copySuccess.style.display = 'none';
 
     // Create share link via API
     fetch('/api/share', {
@@ -184,25 +184,25 @@
     })
     .then(response => response.json())
     .then(data => {
-      if (loading) loading.classList.add('hidden');
+      if (loading) loading.style.display = 'none';
       if (data.share_url) {
         const shareUrl = document.getElementById('share-url');
         if (shareUrl) shareUrl.value = data.share_url;
-        if (content) content.classList.remove('hidden');
+        if (content) content.style.display = 'flex';
       } else {
         const errorMsg = document.getElementById('share-error-message');
         if (errorMsg) {
           errorMsg.textContent = data.error || 'Erreur lors de la création du lien de partage';
         }
-        if (error) error.classList.remove('hidden');
+        if (error) error.style.display = 'block';
       }
     })
     .catch(error => {
       console.error('Share API error:', error);
-      if (loading) loading.classList.add('hidden');
+      if (loading) loading.style.display = 'none';
       const errorMsg = document.getElementById('share-error-message');
       if (errorMsg) errorMsg.textContent = 'Erreur réseau. Veuillez réessayer.';
-      if (error) error.classList.remove('hidden');
+      if (error) error.style.display = 'block';
     });
   }
 
@@ -211,10 +211,10 @@
    */
   function closeShareModal() {
     const modal = document.getElementById('share-modal');
-    if (modal) modal.classList.add('hidden');
+    if (modal) modal.style.display = 'none';
 
     const copySuccess = document.getElementById('copy-success');
-    if (copySuccess) copySuccess.classList.add('hidden');
+    if (copySuccess) copySuccess.style.display = 'none';
   }
 
   /**
