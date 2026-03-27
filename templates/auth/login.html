@@ -3,63 +3,65 @@
 {% block title %}Connexion - Générateur de Logos RDC{% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-  <div class="w-full max-w-md">
+<div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: var(--space-8) var(--space-4);">
+  <div style="width: 100%; max-width: 400px;">
     <!-- Header -->
-    <div class="text-center mb-8">
-      <div class="w-16 h-16 bg-rdc-bleu rounded-full flex items-center justify-center mx-auto mb-4">
-        <span class="text-white font-bold text-2xl">RDC</span>
+    <div style="text-align: center; margin-bottom: var(--space-8);">
+      <div style="width: 64px; height: 64px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); box-shadow: var(--elevation-2);">
+        <span style="color: var(--text-inverse); font-weight: 700; font-size: var(--text-2xl);">RDC</span>
       </div>
-      <h1 class="text-3xl font-bold text-rdc-noir mb-2">Connexion</h1>
-      <p class="text-gray-600">Accédez à votre compte Générateur de Logos</p>
+      <h1 style="font-size: var(--text-4xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">Connexion</h1>
+      <p style="color: var(--text-secondary); margin-bottom: 0;">Accédez à votre compte Générateur de Logos</p>
     </div>
 
     <!-- Login Form -->
-    <form method="POST" action="{{ url_for('auth.login') }}" class="bg-white rounded-lg shadow-md p-8 space-y-6">
+    <form method="POST" action="{{ url_for('auth.login') }}" class="card" style="padding: var(--space-8); display: flex; flex-direction: column; gap: var(--space-6);">
       <!-- CSRF Token -->
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
       <!-- Email Field -->
       <div>
-        <label for="email" class="block text-sm font-semibold text-rdc-noir mb-2">
-          Adresse e-mail
+        <label for="email" class="form-label">
+          Adresse e-mail <span style="color: var(--rdc-rouge);">*</span>
         </label>
         <input
           type="email"
           id="email"
           name="email"
           required
-          class="input-field"
+          class="input"
           placeholder="exemple@domaine.com"
+          style="width: 100%;"
         >
-        <p class="text-xs text-gray-500 mt-1">Nous ne partagerons jamais votre e-mail.</p>
+        <p class="form-hint">Nous ne partagerons jamais votre e-mail.</p>
       </div>
 
       <!-- Password Field -->
       <div>
-        <label for="password" class="block text-sm font-semibold text-rdc-noir mb-2">
-          Mot de passe
+        <label for="password" class="form-label">
+          Mot de passe <span style="color: var(--rdc-rouge);">*</span>
         </label>
         <input
           type="password"
           id="password"
           name="password"
           required
-          class="input-field"
+          class="input"
           placeholder="••••••••"
+          style="width: 100%;"
         >
-        <p class="text-xs text-gray-500 mt-1">Au moins 6 caractères.</p>
+        <p class="form-hint">Au moins 6 caractères.</p>
       </div>
 
       <!-- Remember Me -->
-      <div class="flex items-center">
+      <div style="display: flex; align-items: center; gap: var(--space-2);">
         <input
           type="checkbox"
           id="remember"
           name="remember"
-          class="w-4 h-4 text-rdc-bleu bg-gray-100 border-gray-300 rounded focus:ring-rdc-bleu cursor-pointer"
+          style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);"
         >
-        <label for="remember" class="ml-2 text-sm text-gray-700 cursor-pointer">
+        <label for="remember" style="cursor: pointer; margin-bottom: 0; font-size: var(--text-sm); color: var(--text-primary);">
           Se souvenir de moi
         </label>
       </div>
@@ -67,26 +69,24 @@
       <!-- Submit Button -->
       <button
         type="submit"
-        class="w-full btn-primary"
+        class="btn btn-primary"
+        style="width: 100%; justify-content: center;"
       >
         Connexion
       </button>
 
       <!-- Divider -->
-      <div class="relative">
-        <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-300"></div>
-        </div>
-        <div class="relative flex justify-center text-sm">
-          <span class="px-2 bg-white text-gray-500">Ou</span>
-        </div>
+      <div style="position: relative; display: flex; align-items: center; gap: var(--space-3);">
+        <div style="flex: 1; height: 1px; background-color: var(--border-soft);"></div>
+        <span style="font-size: var(--text-sm); color: var(--text-secondary);">Ou</span>
+        <div style="flex: 1; height: 1px; background-color: var(--border-soft);"></div>
       </div>
 
       <!-- Register Link -->
-      <div class="text-center">
-        <p class="text-sm text-gray-700">
+      <div style="text-align: center;">
+        <p style="font-size: var(--text-sm); color: var(--text-primary); margin-bottom: 0;">
           Pas encore de compte?
-          <a href="{{ url_for('auth.register') }}" class="font-semibold text-rdc-bleu hover:text-rdc-rouge transition-colors">
+          <a href="{{ url_for('auth.register') }}" style="color: var(--primary); font-weight: 600; text-decoration: none; transition: color var(--transition-normal);">
             S'inscrire
           </a>
         </p>
@@ -94,10 +94,13 @@
     </form>
 
     <!-- Security Note -->
-    <div class="mt-8 p-4 bg-blue-50 border-l-4 border-rdc-bleu rounded">
-      <p class="text-xs text-gray-700">
-        <strong>Sécurité :</strong> Votre mot de passe est chiffré et sécurisé. Ne partagez jamais vos informations de connexion.
-      </p>
+    <div class="alert alert-info" style="margin-top: var(--space-8); display: flex; align-items: flex-start; gap: var(--space-3);">
+      <span style="font-size: var(--text-lg); margin-top: 2px;">🔒</span>
+      <div>
+        <p style="font-size: var(--text-sm); margin-bottom: 0;">
+          <strong>Sécurité :</strong> Votre mot de passe est chiffré et sécurisé. Ne partagez jamais vos informations de connexion.
+        </p>
+      </div>
     </div>
   </div>
 </div>

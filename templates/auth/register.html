@@ -3,61 +3,64 @@
 {% block title %}Inscription - Générateur de Logos RDC{% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-  <div class="w-full max-w-md">
+<div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: var(--space-8) var(--space-4);">
+  <div style="width: 100%; max-width: 450px;">
     <!-- Header -->
-    <div class="text-center mb-8">
-      <div class="w-16 h-16 bg-rdc-rouge rounded-full flex items-center justify-center mx-auto mb-4">
-        <span class="text-white font-bold text-2xl">+</span>
+    <div style="text-align: center; margin-bottom: var(--space-8);">
+      <div style="width: 64px; height: 64px; background: var(--rdc-rouge); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); box-shadow: var(--elevation-2);">
+        <span style="color: var(--text-inverse); font-weight: 700; font-size: var(--text-2xl);">+</span>
       </div>
-      <h1 class="text-3xl font-bold text-rdc-noir mb-2">S'inscrire</h1>
-      <p class="text-gray-600">Créez un compte Générateur de Logos</p>
+      <h1 style="font-size: var(--text-4xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">S'inscrire</h1>
+      <p style="color: var(--text-secondary); margin-bottom: 0;">Créez un compte Générateur de Logos</p>
     </div>
 
     <!-- Registration Form -->
-    <form method="POST" action="{{ url_for('auth.register') }}" class="bg-white rounded-lg shadow-md p-8 space-y-5">
+    <form method="POST" action="{{ url_for('auth.register') }}" class="card" style="padding: var(--space-8); display: flex; flex-direction: column; gap: var(--space-5);">
       <!-- CSRF Token -->
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
       <!-- Email Field -->
       <div>
-        <label for="email" class="block text-sm font-semibold text-rdc-noir mb-2">
-          Adresse e-mail <span class="text-rdc-rouge">*</span>
+        <label for="email" class="form-label">
+          Adresse e-mail <span style="color: var(--rdc-rouge);">*</span>
         </label>
         <input
           type="email"
           id="email"
           name="email"
           required
-          class="input-field"
+          class="input"
           placeholder="exemple@domaine.com"
+          style="width: 100%;"
         >
       </div>
 
       <!-- Full Name Field -->
       <div>
-        <label for="full_name" class="block text-sm font-semibold text-rdc-noir mb-2">
+        <label for="full_name" class="form-label">
           Nom complet
         </label>
         <input
           type="text"
           id="full_name"
           name="full_name"
-          class="input-field"
+          class="input"
           placeholder="Jean Dupont"
+          style="width: 100%;"
         >
-        <p class="text-xs text-gray-500 mt-1">Optionnel</p>
+        <p class="form-hint">Optionnel</p>
       </div>
 
       <!-- Language Selection -->
       <div>
-        <label for="language" class="block text-sm font-semibold text-rdc-noir mb-2">
+        <label for="language" class="form-label">
           Langue préférée
         </label>
         <select
           id="language"
           name="language"
-          class="input-field"
+          class="input select"
+          style="width: 100%;"
         >
           <option value="fr" selected>Français</option>
           <option value="lingala">Lingala</option>
@@ -67,70 +70,70 @@
 
       <!-- Password Field -->
       <div>
-        <label for="password" class="block text-sm font-semibold text-rdc-noir mb-2">
-          Mot de passe <span class="text-rdc-rouge">*</span>
+        <label for="password" class="form-label">
+          Mot de passe <span style="color: var(--rdc-rouge);">*</span>
         </label>
         <input
           type="password"
           id="password"
           name="password"
           required
-          class="input-field"
+          class="input"
           placeholder="••••••••"
+          style="width: 100%;"
         >
-        <p class="text-xs text-gray-500 mt-1">Min. 6 caractères</p>
+        <p class="form-hint">Min. 6 caractères</p>
 
         <!-- Password Strength Indicator -->
-        <div id="password-strength" class="mt-3 space-y-2">
-          <div class="flex space-x-1">
-            <div id="strength-1" class="flex-1 h-2 bg-gray-300 rounded-full"></div>
-            <div id="strength-2" class="flex-1 h-2 bg-gray-300 rounded-full"></div>
-            <div id="strength-3" class="flex-1 h-2 bg-gray-300 rounded-full"></div>
-            <div id="strength-4" class="flex-1 h-2 bg-gray-300 rounded-full"></div>
+        <div id="password-strength" style="margin-top: var(--space-3); display: flex; flex-direction: column; gap: var(--space-2);">
+          <div style="display: flex; gap: 4px;">
+            <div id="strength-1" style="flex: 1; height: 6px; background-color: var(--border-soft); border-radius: 3px;"></div>
+            <div id="strength-2" style="flex: 1; height: 6px; background-color: var(--border-soft); border-radius: 3px;"></div>
+            <div id="strength-3" style="flex: 1; height: 6px; background-color: var(--border-soft); border-radius: 3px;"></div>
+            <div id="strength-4" style="flex: 1; height: 6px; background-color: var(--border-soft); border-radius: 3px;"></div>
           </div>
-          <p id="strength-text" class="text-xs text-gray-600">Entrez un mot de passe</p>
+          <p id="strength-text" style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: 0;">Entrez un mot de passe</p>
         </div>
       </div>
 
       <!-- Password Confirmation Field -->
       <div>
-        <label for="password_confirm" class="block text-sm font-semibold text-rdc-noir mb-2">
-          Confirmer le mot de passe <span class="text-rdc-rouge">*</span>
+        <label for="password_confirm" class="form-label">
+          Confirmer le mot de passe <span style="color: var(--rdc-rouge);">*</span>
         </label>
         <input
           type="password"
           id="password_confirm"
           name="password_confirm"
           required
-          class="input-field"
+          class="input"
           placeholder="••••••••"
+          style="width: 100%;"
         >
-        <p id="password-match" class="text-xs text-gray-500 mt-1">Les mots de passe doivent correspondre</p>
+        <p id="password-match" style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: var(--space-2); margin-bottom: 0;">Les mots de passe doivent correspondre</p>
       </div>
 
       <!-- Submit Button -->
       <button
         type="submit"
-        class="w-full btn-secondary"
+        class="btn btn-secondary"
+        style="width: 100%; justify-content: center;"
       >
         S'inscrire
       </button>
 
       <!-- Divider -->
-      <div class="relative">
-        <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-300"></div>
-        </div>
-        <div class="relative flex justify-center text-sm">
-          <span class="px-2 bg-white text-gray-500">Ou</span>
-        </div>
+      <div style="position: relative; display: flex; align-items: center; gap: var(--space-3);">
+        <div style="flex: 1; height: 1px; background-color: var(--border-soft);"></div>
+        <span style="font-size: var(--text-sm); color: var(--text-secondary);">Ou</span>
+        <div style="flex: 1; height: 1px; background-color: var(--border-soft);"></div>
       </div>
 
       <!-- Login Link -->
-      <div class="text-center">
-        <p class="text-sm text-gray-700">
+      <div style="text-align: center;">
+        <p style="font-size: var(--text-sm); color: var(--text-primary); margin-bottom: 0;">
           Vous avez déjà un compte?
-          <a href="{{ url_for('auth.login') }}" class="font-semibold text-rdc-bleu hover:text-rdc-rouge transition-colors">
+          <a href="{{ url_for('auth.login') }}" style="color: var(--primary); font-weight: 600; text-decoration: none; transition: color var(--transition-normal);">
             Connectez-vous
           </a>
         </p>
@@ -138,10 +141,13 @@
     </form>
 
     <!-- Privacy Note -->
-    <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-rdc-jaune rounded">
-      <p class="text-xs text-gray-700">
-        <strong>Confidentialité :</strong> Nous ne partagerons jamais vos données personnelles avec des tiers.
-      </p>
+    <div class="alert alert-info" style="margin-top: var(--space-8); display: flex; align-items: flex-start; gap: var(--space-3);">
+      <span style="font-size: var(--text-lg); margin-top: 2px;">🔐</span>
+      <div>
+        <p style="font-size: var(--text-sm); margin-bottom: 0;">
+          <strong>Confidentialité :</strong> Nous ne partagerons jamais vos données personnelles avec des tiers.
+        </p>
+      </div>
     </div>
   </div>
 </div>
