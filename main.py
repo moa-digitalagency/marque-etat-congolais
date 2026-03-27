@@ -36,11 +36,12 @@ if __name__ == '__main__':
     with app.app_context():
         # Import after app context
         from init_db import init_database
+        from sqlalchemy import text
 
         # Initialize database on first run
         try:
             # Try to query User table to check if DB is initialized
-            user_count = User.query.count()
+            db.session.execute(text("SELECT COUNT(*) FROM \"user\""))
         except:
             # If error, initialize database
             print("📊 Initializing database...")
