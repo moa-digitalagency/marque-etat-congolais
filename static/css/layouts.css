@@ -1,0 +1,163 @@
+/* ================================================================
+   LAYOUTS — Système de Design · Marque État Congolais
+   ================================================================ */
+
+/* ── Conteneur principal ── */
+.container-rdc {
+  width: 100%;
+  max-width: var(--header-w);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+@media (min-width: 768px)  { .container-rdc { padding: 0 var(--space-8); } }
+@media (min-width: 1280px) { .container-rdc { padding: 0 var(--space-12); } }
+
+/* ── Grilles responsive ── */
+.grid { display: grid; gap: var(--space-6); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 1279px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ── Flexbox utilitaires ── */
+.flex-center   { display: flex; align-items: center; justify-content: center; }
+.flex-between  { display: flex; align-items: center; justify-content: space-between; }
+.flex-stack    { display: flex; flex-direction: column; }
+.flex-wrap     { flex-wrap: wrap; }
+
+/* ── Section spacing ── */
+.section {
+  padding: var(--space-16) 0;
+}
+.section + .section {
+  border-top: 1px solid var(--border-soft);
+}
+
+/* ── Sidebar layout ── */
+.layout-sidebar {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+  border-right: 1px solid var(--border-soft);
+  box-shadow: 2px 0 10px rgba(0,0,0,0.04);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
+  z-index: var(--z-sticky);
+  transition: width var(--transition-slow);
+}
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed);
+}
+
+.sidebar-header {
+  padding: var(--space-5) var(--space-5);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.sidebar-section {
+  padding: var(--space-4) var(--space-3);
+}
+.sidebar-section-title {
+  font-family: var(--font-principale);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding: 0 var(--space-3) var(--space-2);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: var(--font-principale);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition-normal);
+  border-left: 3px solid transparent;
+}
+.sidebar-link:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.sidebar-link.active {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 600;
+  border-left-color: var(--primary);
+}
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+  padding: var(--space-8);
+  flex: 1;
+  transition: margin-left var(--transition-slow);
+}
+
+/* ── Content zone (438px charter spec) ── */
+.content-zone {
+  max-width: var(--content-zone);
+}
+
+/* ── Page hero ── */
+.page-hero {
+  padding: var(--space-10) 0 var(--space-8);
+  border-bottom: 1px solid var(--border-soft);
+  margin-bottom: var(--space-8);
+}
+.page-title {
+  font-family: var(--font-principale);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: var(--leading-tight);
+}
+.page-subtitle {
+  font-family: var(--font-complement);
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+}
+
+/* ── Responsive sidebar ── */
+@media (max-width: 1023px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition-slow);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* ── Visually hidden (accessibilité) ── */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
