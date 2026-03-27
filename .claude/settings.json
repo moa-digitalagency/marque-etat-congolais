@@ -33,7 +33,18 @@
       "Bash(python -c \"from routes.api import api_bp; print\\(''✓ API blueprint imported successfully''\\); print\\(f''✓ Blueprint name: {api_bp.name}''\\); print\\(f''✓ Blueprint URL prefix: {api_bp.url_prefix}''\\)\")",
       "Read(//api/**)",
       "Bash(python -c \"import sys; sys.path.insert\\(0, ''.''\\); from routes.api import api_bp; print\\(''✅ Syntax OK''\\)\")",
-      "Bash(/tmp/template_summary.txt:*)"
+      "Bash(/tmp/template_summary.txt:*)",
+      "Bash(python -c \"from routes.dashboard import dashboard_bp; print\\(''✓ Dashboard routes imported successfully''\\); print\\(''Routes:'', [rule.rule for rule in dashboard_bp.deferred_functions if hasattr\\(rule, ''rule''\\)]\\)\")",
+      "Bash(node -c static/js/csrf-utils.js)",
+      "Bash(node -c static/js/clipboard-utils.js)",
+      "Bash(node -c static/js/modals.js)",
+      "Bash(node -c static/js/logo-generator.js)",
+      "Bash(node -c static/js/dashboard.js)",
+      "Bash(wc -l /Users/moadigitalagency/marque-etat-congolais/static/js/*.js)",
+      "Bash(/tmp/task15_summary.txt:*)",
+      "Bash(/tmp/verify_exports.txt:*)",
+      "Bash(__NEW_LINE_555aa1bd9832824f__ cat:*)",
+      "Bash(__NEW_LINE_555aa1bd9832824f__ echo:*)"
     ]
   }
 }
