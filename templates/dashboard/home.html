@@ -213,9 +213,7 @@
 <script>
 // Download
 function downloadLogo(logoId, format) {
-  const url = `{{ url_for('public.download', logo_id='LOGO_ID', format='FORMAT') }}`
-    .replace('LOGO_ID', logoId)
-    .replace('FORMAT', format);
+  const url = `/download/${logoId}?format=${format}`;
 
   const link = document.createElement('a');
   link.href = url;
