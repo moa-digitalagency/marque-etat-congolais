@@ -242,6 +242,7 @@ def share(token):
             logo=logo,
             share_link=share_link,
             png_url=url_for('public.download', logo_id=logo.id, format='png', _external=False),
+            png_white_url=url_for('public.download', logo_id=logo.id, format='png_white', _external=False),
             jpg_url=url_for('public.download', logo_id=logo.id, format='jpg', _external=False)
         )
 
