@@ -19,11 +19,14 @@
     if (!searchInput) return;
 
     const searchText = searchInput.value.toLowerCase().trim();
-    const cards = document.querySelectorAll('.logo-card');
+    const grid = document.getElementById('logos-grid');
+    if (!grid) return;
+
+    const cards = grid.querySelectorAll('[data-institution]');
 
     cards.forEach(card => {
       const institution = card.getAttribute('data-institution') || '';
-      if (institution.includes(searchText)) {
+      if (searchText === '' || institution.includes(searchText)) {
         card.style.display = '';
       } else {
         card.style.display = 'none';
@@ -47,7 +50,7 @@
       return;
     }
 
-    const downloadUrl = `/download/${logoId}/${format}`;
+    const downloadUrl = `/download/${logoId}?format=${format}`;
 
     const link = document.createElement('a');
     link.href = downloadUrl;
@@ -69,13 +72,13 @@
     const content = document.getElementById('share-content');
     const error = document.getElementById('share-error');
 
-    if (modal) modal.classList.remove('hidden');
-    if (loading) loading.classList.remove('hidden');
-    if (content) content.classList.add('hidden');
-    if (error) error.classList.add('hidden');
+    if (modal) modal.style.display = 'flex';
+    if (loading) loading.style.display = 'flex';
+    if (content) content.style.display = 'none';
+    if (error) error.style.display = 'none';
 
     const copySuccess = document.getElementById('copy-success');
-    if (copySuccess) copySuccess.classList.add('hidden');
+    if (copySuccess) copySuccess.style.display = 'none';
 
     // Create share link via API
     fetch('/api/share', {
@@ -87,25 +90,25 @@
     })
     .then(response => response.json())
     .then(data => {
-      if (loading) loading.classList.add('hidden');
+      if (loading) loading.style.display = 'none';
       if (data.share_url) {
         const shareUrl = document.getElementById('share-url');
         if (shareUrl) shareUrl.value = data.share_url;
-        if (content) content.classList.remove('hidden');
+        if (content) content.style.display = 'flex';
       } else {
         const errorMsg = document.getElementById('share-error-message');
         if (errorMsg) {
           errorMsg.textContent = data.error || 'Erreur lors de la création du lien de partage';
         }
-        if (error) error.classList.remove('hidden');
+        if (error) error.style.display = 'flex';
       }
     })
     .catch(error => {
       console.error('Share API error:', error);
-      if (loading) loading.classList.add('hidden');
+      if (loading) loading.style.display = 'none';
       const errorMsg = document.getElementById('share-error-message');
       if (errorMsg) errorMsg.textContent = 'Erreur réseau. Veuillez réessayer.';
-      if (error) error.classList.remove('hidden');
+      if (error) error.style.display = 'flex';
     });
   }
 
@@ -114,10 +117,10 @@
    */
   function closeShareModal() {
     const modal = document.getElementById('share-modal');
-    if (modal) modal.classList.add('hidden');
+    if (modal) modal.style.display = 'none';
 
     const copySuccess = document.getElementById('copy-success');
-    if (copySuccess) copySuccess.classList.add('hidden');
+    if (copySuccess) copySuccess.style.display = 'none';
   }
 
   /**
@@ -159,7 +162,7 @@
     if (message) {
       message.textContent = `Êtes-vous sûr de vouloir supprimer le logo de "${institutionName}"? Cette action ne peut pas être annulée.`;
     }
-    if (modal) modal.classList.remove('hidden');
+    if (modal) modal.style.display = 'flex';
   }
 
   /**
@@ -167,7 +170,7 @@
    */
   function closeDeleteModal() {
     const modal = document.getElementById('delete-modal');
-    if (modal) modal.classList.add('hidden');
+    if (modal) modal.style.display = 'none';
     currentDeleteLogoId = null;
     currentDeleteLogoName = null;
   }
@@ -197,7 +200,7 @@
       button.textContent = 'Suppression en cours...';
     }
 
-    fetch(`/api/dashboard/${currentDeleteLogoId}`, {
+    fetch(`/dashboard/${currentDeleteLogoId}`, {
       method: 'DELETE',
       headers: getFetchHeaders(true)
     })
@@ -205,26 +208,29 @@
     .then(data => {
       if (data.success) {
         // Remove the logo card from DOM with animation
-        const cards = document.querySelectorAll('.logo-card');
-        cards.forEach(card => {
-          const cardText = card.textContent;
-          if (cardText.includes(currentDeleteLogoName)) {
-            // Fade out animation
-            card.style.transition = 'opacity 0.3s ease-in-out';
-            card.style.opacity = '0';
-            setTimeout(() => {
-              card.remove();
-            }, 300);
-          }
-        });
+        const grid = document.getElementById('logos-grid');
+        if (grid) {
+          const cards = grid.querySelectorAll('[data-institution]');
+          cards.forEach(card => {
+            const institution = card.getAttribute('data-institution') || '';
+            if (institution.includes(currentDeleteLogoName.toLowerCase())) {
+              // Fade out animation
+              card.style.transition = 'opacity 0.3s ease-in-out';
+              card.style.opacity = '0';
+              setTimeout(() => {
+                card.remove();
+              }, 300);
+            }
+          });
+        }
 
         closeDeleteModal();
 
         // Show success message
         const message = document.createElement('div');
-        message.className = 'flash-success';
+        message.style.cssText = 'background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px 20px; border-radius: 4px; margin-bottom: 16px;';
         message.textContent = 'Logo supprimé avec succès.';
-        const container = document.querySelector('main > div > div');
+        const container = document.querySelector('div[style*="padding: var(--space-8)"]');
         if (container) {
           container.insertBefore(message, container.firstChild);
           setTimeout(() => message.remove(), 3000);
