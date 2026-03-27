@@ -180,22 +180,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Reset all indicators
     for (let i = 1; i <= 4; i++) {
       const indicator = document.getElementById(`strength-${i}`);
-      indicator.className = 'flex-1 h-2 bg-gray-300 rounded-full';
+      indicator.className = 'strength-indicator';
     }
 
-    // Color indicators
-    const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500'];
+    // Color indicators based on strength
+    const strengthClasses = ['strength-indicator--very-weak', 'strength-indicator--weak', 'strength-indicator--medium', 'strength-indicator--strong'];
     const strengthLabels = ['Très faible', 'Faible', 'Moyen', 'Fort'];
+    const textClasses = ['strength-text--weak', 'strength-text--weak', 'strength-text--medium', 'strength-text--strong'];
 
     if (password === '') {
       strengthText.textContent = 'Entrez un mot de passe';
-      strengthText.className = 'text-xs text-gray-600';
+      strengthText.className = 'strength-text strength-text--empty';
     } else if (strength > 0) {
       for (let i = 0; i < strength; i++) {
-        document.getElementById(`strength-${i + 1}`).className = `flex-1 h-2 ${colors[strength - 1]} rounded-full`;
+        const indicator = document.getElementById(`strength-${i + 1}`);
+        indicator.classList.add(strengthClasses[strength - 1]);
       }
       strengthText.textContent = `Force : ${strengthLabels[strength - 1]}`;
-      strengthText.className = `text-xs font-semibold ${strength < 2 ? 'text-red-600' : strength < 3 ? 'text-orange-600' : 'text-green-600'}`;
+      strengthText.className = `strength-text ${textClasses[strength - 1]}`;
     }
 
     checkPasswordMatch();
@@ -207,13 +209,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (confirm === '') {
       passwordMatch.textContent = 'Confirmez votre mot de passe';
-      passwordMatch.className = 'text-xs text-gray-500 mt-1';
+      passwordMatch.className = 'password-match-feedback password-match-feedback--empty';
     } else if (password === confirm) {
       passwordMatch.textContent = '✓ Les mots de passe correspondent';
-      passwordMatch.className = 'text-xs text-green-600 font-semibold mt-1';
+      passwordMatch.className = 'password-match-feedback password-match-feedback--match';
     } else {
       passwordMatch.textContent = '✗ Les mots de passe ne correspondent pas';
-      passwordMatch.className = 'text-xs text-rdc-rouge font-semibold mt-1';
+      passwordMatch.className = 'password-match-feedback password-match-feedback--mismatch';
     }
   }
 
