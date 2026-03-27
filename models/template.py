@@ -17,7 +17,8 @@ class Template(db.Model):
     is_active = db.Column(db.Boolean, default=True)
 
     # Relationships
-    logos = db.relationship('LogoGeneration', backref='template', lazy=True)
+    # Note: LogoGeneration has a 'template' backref to this model
+    # We don't define a logos relationship here to avoid conflicts
 
     def get_params(self):
         """Get default parameters with fallbacks"""
