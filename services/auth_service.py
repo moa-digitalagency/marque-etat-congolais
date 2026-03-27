@@ -73,3 +73,11 @@ class AuthService:
         db.session.commit()
 
         return user
+
+    @staticmethod
+    def update_password(user: User, new_password: str) -> None:
+        """Update user password with validation"""
+        if not new_password or len(new_password) < 6:
+            raise ValueError('Le mot de passe doit contenir au moins 6 caractères')
+
+        user.set_password(new_password)

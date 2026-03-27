@@ -13,6 +13,7 @@ import traceback
 
 from models import db, LogoGeneration, SharedLink, Template, User
 from services import TemplateService
+from services.auth_service import AuthService
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
@@ -137,26 +138,66 @@ def list_logos():
 @api_bp.route('/admin/users/<int:user_id>', methods=['POST'])
 @login_required
 def update_user(user_id):
-    """Update user role and status (admin only)"""
+    """Update user details (admin only)"""
     if current_user.role != 'admin':
         return jsonify({'error': 'Accès refusé'}), 403
 
     user = User.query.get_or_404(user_id)
     data = request.get_json()
 
-    if 'role' in data:
-        if data['role'] not in ['user', 'admin']:
-            return jsonify({'error': 'Rôle invalide'}), 400
-        user.role = data['role']
+    try:
+        if 'role' in data:
+            if data['role'] not in ['user', 'admin']:
+                return jsonify({'error': 'Rôle invalide'}), 400
+            user.role = data['role']
 
-    if 'is_active' in data:
-        user.is_active = data['is_active']
+        if 'is_active' in data:
+            user.is_active = data['is_active']
 
-    db.session.commit()
+        if 'full_name' in data:
+            user.full_name = data['full_name'] if data['full_name'] else None
 
-    return jsonify({
-        'id': user.id,
-        'email': user.email,
-        'role': user.role,
-        'is_active': user.is_active
-    })
+        if 'ministry' in data:
+            user.ministry = data['ministry'] if data['ministry'] else None
+
+        if 'password' in data and data['password']:
+            # Update password using the service
+            AuthService.update_password(user, data['password'])
+
+        db.session.commit()
+
+        return jsonify({
+            'id': user.id,
+            'email': user.email,
+            'full_name': user.full_name,
+            'ministry': user.ministry,
+            'role': user.role,
+            'is_active': user.is_active
+        })
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f'Erreur mise à jour utilisateur: {traceback.format_exc()}')
+        return jsonify({'error': 'Erreur serveur'}), 500
+
+
+@api_bp.route('/admin/users/<int:user_id>/delete', methods=['POST'])
+@login_required
+def delete_user(user_id):
+    """Delete a user (admin only)"""
+    if current_user.role != 'admin':
+        return jsonify({'error': 'Accès refusé'}), 403
+
+    if user_id == current_user.id:
+        return jsonify({'error': 'Vous ne pouvez pas supprimer votre propre compte'}), 400
+
+    try:
+        user = User.query.get_or_404(user_id)
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'message': 'Utilisateur supprimé avec succès'}), 200
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f'Erreur suppression utilisateur: {traceback.format_exc()}')
+        return jsonify({'error': 'Erreur serveur'}), 500
