@@ -135,6 +135,55 @@ def list_logos():
         return jsonify({'error': 'Erreur serveur'}), 500
 
 
+@api_bp.route('/admin/users', methods=['POST'])
+@login_required
+def create_user():
+    """Create a new user (admin only)"""
+    if current_user.role != 'admin':
+        return jsonify({'error': 'Accès refusé'}), 403
+
+    data = request.get_json()
+
+    # Validate required fields
+    email = data.get('email', '').strip()
+    password = data.get('password', '').strip()
+
+    if not email:
+        return jsonify({'error': 'Email est requis'}), 400
+
+    if not password or len(password) < 6:
+        return jsonify({'error': 'Mot de passe doit contenir au moins 6 caractères'}), 400
+
+    try:
+        # Create user using AuthService
+        user = AuthService.register_user(
+            email=email,
+            password=password,
+            full_name=data.get('full_name', '').strip() or None,
+            role=data.get('role', 'user')
+        )
+
+        # Update ministry if provided
+        if data.get('ministry'):
+            user.ministry = data.get('ministry').strip()
+            db.session.commit()
+
+        return jsonify({
+            'id': user.id,
+            'email': user.email,
+            'full_name': user.full_name,
+            'ministry': user.ministry,
+            'role': user.role,
+            'is_active': user.is_active
+        }), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f'Erreur création utilisateur: {traceback.format_exc()}')
+        return jsonify({'error': 'Erreur serveur'}), 500
+
+
 @api_bp.route('/admin/users/<int:user_id>', methods=['POST'])
 @login_required
 def update_user(user_id):
