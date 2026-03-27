@@ -62,12 +62,25 @@
     const img = document.getElementById('preview-image');
     const loading = document.getElementById('preview-loading');
 
+    // Also show white preview
+    const whiteImg = document.getElementById('preview-image-white');
+    const whiteLoading = document.getElementById('preview-white-loading');
+
     if (img) {
       img.src = url;
       img.style.display = 'block';
     }
     if (loading) {
       loading.style.display = 'none';
+    }
+
+    // Load white preview using same currentLogoId
+    if (whiteImg && currentLogoId) {
+      whiteImg.src = `/download/${currentLogoId}?format=png_white`;
+      whiteImg.style.display = 'block';
+    }
+    if (whiteLoading) {
+      whiteLoading.style.display = 'none';
     }
   }
 
@@ -79,9 +92,15 @@
     const loading = document.getElementById('preview-loading');
     const error = document.getElementById('preview-error');
 
+    const whiteImg = document.getElementById('preview-image-white');
+    const whiteLoading = document.getElementById('preview-white-loading');
+
     if (img) img.style.display = 'none';
     if (error) error.style.display = 'none';
     if (loading) loading.style.display = 'block';
+
+    if (whiteImg) whiteImg.style.display = 'none';
+    if (whiteLoading) whiteLoading.style.display = 'block';
   }
 
   /**
