@@ -134,7 +134,7 @@
       return;
     }
 
-    if (format !== 'png' && format !== 'jpg') {
+    if (format !== 'png' && format !== 'png_white' && format !== 'jpg') {
       console.error('Invalid format:', format);
       return;
     }
@@ -144,7 +144,14 @@
 
     const link = document.createElement('a');
     link.href = downloadUrl;
-    link.download = `logo_${currentLogoId}.${format}`;
+    // Determine filename based on format
+    let filename = `logo_${currentLogoId}`;
+    if (format === 'png_white') {
+      filename += '_white.png';
+    } else {
+      filename += `.${format}`;
+    }
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
