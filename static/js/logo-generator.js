@@ -95,8 +95,8 @@
     const loading = document.getElementById('preview-loading');
 
     if (error) error.style.display = 'block';
-    if (img) img.classList.add('hidden');
-    if (loading) loading.classList.add('hidden');
+    if (img) img.style.display = 'none';
+    if (loading) loading.style.display = 'block';
     if (errorMsg) errorMsg.textContent = message;
   }
 
