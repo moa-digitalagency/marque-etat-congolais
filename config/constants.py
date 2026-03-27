@@ -8,7 +8,8 @@ SPACING = 85
 TEXT_SPACING = 80
 FONT_SIZE = 105
 LINE_SPACING = 110
-TEXT_COLOR = (0, 0, 0, 255)
+TEXT_COLOR = (0, 0, 0, 255)  # Black text
+TEXT_COLOR_WHITE = (255, 255, 255, 255)  # White text
 
 # Text splitting
 MAX_LINES = 5
@@ -18,7 +19,9 @@ MAX_WORDS_PER_LINE = 3
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOGO_ASSETS_PATH = os.path.join(PROJECT_ROOT, 'statics', 'assets')
 ARMOIRIES_FILE = 'armoiries.png'
+ARMOIRIES_WHITE_FILE = 'armoiries_white.png'
 LIGNE_ETAT_FILE = 'ligne_etat.png'
+LIGNE_ETAT_WHITE_FILE = 'ligne_etat_white.png'
 FONT_FILE = os.path.join(PROJECT_ROOT, 'statics', 'font', 'cooper-hewitt', 'CooperHewitt-Bold.otf')
 
 # Supported languages

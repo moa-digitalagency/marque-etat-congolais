@@ -10,9 +10,10 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from algorithms.text_splitter import split_unit_name
 from config.constants import (
-    LOGO_ASSETS_PATH, ARMOIRIES_FILE, LIGNE_ETAT_FILE, FONT_FILE,
+    LOGO_ASSETS_PATH, ARMOIRIES_FILE, ARMOIRIES_WHITE_FILE,
+    LIGNE_ETAT_FILE, LIGNE_ETAT_WHITE_FILE, FONT_FILE,
     ARMOIRIES_HEIGHT, SPACING, TEXT_SPACING, FONT_SIZE,
-    LINE_SPACING, TEXT_COLOR
+    LINE_SPACING, TEXT_COLOR, TEXT_COLOR_WHITE
 )
 
 class LogoGeneratorService:
@@ -30,7 +31,9 @@ class LogoGeneratorService:
 
         self.logo_assets_base = logo_assets_base_path
         self.armoiries_path = os.path.join(logo_assets_base_path, ARMOIRIES_FILE)
+        self.armoiries_white_path = os.path.join(logo_assets_base_path, ARMOIRIES_WHITE_FILE)
         self.ligne_etat_path = os.path.join(logo_assets_base_path, LIGNE_ETAT_FILE)
+        self.ligne_etat_white_path = os.path.join(logo_assets_base_path, LIGNE_ETAT_WHITE_FILE)
         self.font_path = FONT_FILE
 
     def generate_logo(
@@ -42,7 +45,8 @@ class LogoGeneratorService:
         text_spacing: int = None,
         font_size: int = None,
         line_spacing: int = None,
-        text_color: tuple = None
+        text_color: tuple = None,
+        white_mode: bool = False
     ) -> BytesIO:
         """
         Generate logo as PNG BytesIO.
@@ -56,6 +60,7 @@ class LogoGeneratorService:
             font_size: Font size for text
             line_spacing: Vertical spacing between lines
             text_color: RGBA color tuple for text
+            white_mode: If True, generate white version with white text
 
         Returns:
             BytesIO containing PNG image (RGBA)
@@ -66,14 +71,16 @@ class LogoGeneratorService:
         text_spacing = text_spacing or TEXT_SPACING
         font_size = font_size or FONT_SIZE
         line_spacing = line_spacing or LINE_SPACING
-        text_color = text_color or TEXT_COLOR
+        text_color = text_color or (TEXT_COLOR_WHITE if white_mode else TEXT_COLOR)
 
         # Validate and load assets
-        self._validate_assets()
+        self._validate_assets(white_mode=white_mode)
 
-        # Load images
-        armoiries = Image.open(self.armoiries_path).convert('RGBA')
-        ligne_etat = Image.open(self.ligne_etat_path).convert('RGBA')
+        # Load images (white or normal version)
+        armoiries_file = self.armoiries_white_path if white_mode else self.armoiries_path
+        ligne_etat_file = self.ligne_etat_white_path if white_mode else self.ligne_etat_path
+        armoiries = Image.open(armoiries_file).convert('RGBA')
+        ligne_etat = Image.open(ligne_etat_file).convert('RGBA')
 
         # Resize armoiries to specified height (maintain aspect ratio)
         armoiries = self._resize_image_by_height(armoiries, armoiries_height)
@@ -136,6 +143,43 @@ class LogoGeneratorService:
 
         return buf
 
+    def generate_logo_white(
+        self,
+        unit_nom: str,
+        language: str = 'fr',
+        armoiries_height: int = None,
+        spacing: int = None,
+        text_spacing: int = None,
+        font_size: int = None,
+        line_spacing: int = None
+    ) -> BytesIO:
+        """
+        Generate white version of logo (white armoiries, white ligne_etat, white text) as PNG BytesIO.
+
+        Args:
+            unit_nom: Institution/unit name
+            language: Language code
+            armoiries_height: Height of armoiries in pixels
+            spacing: Gap between armoiries and ligne_etat
+            text_spacing: Gap between ligne_etat and text
+            font_size: Font size for text
+            line_spacing: Vertical spacing between lines
+
+        Returns:
+            BytesIO containing PNG image (RGBA) with white elements
+        """
+        return self.generate_logo(
+            unit_nom=unit_nom,
+            language=language,
+            armoiries_height=armoiries_height,
+            spacing=spacing,
+            text_spacing=text_spacing,
+            font_size=font_size,
+            line_spacing=line_spacing,
+            text_color=TEXT_COLOR_WHITE,
+            white_mode=True
+        )
+
     def convert_png_to_jpg(self, png_buf: BytesIO, quality: int = 95) -> BytesIO:
         """
         Convert PNG (RGBA) to JPG (RGB) with white background.
@@ -163,11 +207,14 @@ class LogoGeneratorService:
 
         return buf
 
-    def _validate_assets(self):
+    def _validate_assets(self, white_mode: bool = False):
         """Validate that all required asset files exist"""
+        armoiries_path = self.armoiries_white_path if white_mode else self.armoiries_path
+        ligne_etat_path = self.ligne_etat_white_path if white_mode else self.ligne_etat_path
+
         for path, name in [
-            (self.armoiries_path, 'Armoiries'),
-            (self.ligne_etat_path, 'Ligne d\'État'),
+            (armoiries_path, 'Armoiries'),
+            (ligne_etat_path, 'Ligne d\'État'),
             (self.font_path, 'Font')
         ]:
             if not os.path.exists(path):
