@@ -1,0 +1,458 @@
+{% extends "base.html" %}
+
+{% block title %}{{ logo.institution_name }} - Détails du Logo - Générateur de Logos RDC{% endblock %}
+
+{% block content %}
+<!-- CSRF Token for API requests -->
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<div class="max-w-6xl mx-auto px-4 py-12">
+  <!-- Back Button -->
+  <a href="{{ url_for('dashboard.history') }}" class="inline-flex items-center text-rdc-bleu hover:text-rdc-bleu/80 mb-6">
+    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+    <span>Retour à l'historique</span>
+  </a>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Logo Image -->
+    <div class="lg:col-span-2">
+      <!-- Logo Preview Card -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden p-8 mb-8">
+        <h2 class="text-2xl font-bold text-rdc-noir mb-6">Aperçu du logo</h2>
+
+        <!-- Logo Image Container -->
+        <div class="relative bg-gray-50 rounded-lg p-8 flex items-center justify-center min-h-96 border-2 border-gray-200">
+          {% if logo.preview_url %}
+            <img
+              src="{{ logo.preview_url }}"
+              alt="Logo: {{ logo.institution_name }}"
+              class="max-h-full max-w-full object-contain"
+            >
+          {% else %}
+            <div class="text-center">
+              <svg class="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <p class="text-gray-500 font-medium">Aperçu non disponible</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Download Section -->
+      <div class="bg-white rounded-lg shadow-md p-8">
+        <h3 class="text-xl font-bold text-rdc-noir mb-6">Télécharger</h3>
+
+        <div class="space-y-3">
+          <!-- PNG Download -->
+          <button
+            type="button"
+            class="w-full flex items-center justify-between px-6 py-4 bg-rdc-bleu text-white rounded-lg font-semibold hover:bg-opacity-90 transition"
+            onclick="downloadLogo({{ logo.id }}, 'png')"
+            title="Télécharger le logo au format PNG"
+          >
+            <div class="flex items-center space-x-3">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              <span>Télécharger en PNG</span>
+            </div>
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+
+          <!-- JPG Download -->
+          <button
+            type="button"
+            class="w-full flex items-center justify-between px-6 py-4 border-2 border-rdc-bleu text-rdc-bleu rounded-lg font-semibold hover:bg-rdc-bleu hover:text-white transition"
+            onclick="downloadLogo({{ logo.id }}, 'jpg')"
+            title="Télécharger le logo au format JPG"
+          >
+            <div class="flex items-center space-x-3">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              <span>Télécharger en JPG</span>
+            </div>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Details -->
+    <div>
+      <!-- Details Card -->
+      <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+        <h3 class="text-xl font-bold text-rdc-noir mb-6">Détails</h3>
+
+        <div class="space-y-6">
+          <!-- Institution Name -->
+          <div>
+            <label class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Nom de l'institution</label>
+            <p class="text-lg text-rdc-noir font-semibold mt-2">{{ logo.institution_name }}</p>
+          </div>
+
+          <!-- Template -->
+          <div>
+            <label class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Modèle</label>
+            <p class="text-lg text-rdc-noir font-semibold mt-2">
+              {% if logo.template %}
+                {{ logo.template.name }}
+              {% else %}
+                Modèle supprimé
+              {% endif %}
+            </p>
+          </div>
+
+          <!-- Language -->
+          <div>
+            <label class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Langue</label>
+            <div class="flex items-center space-x-2 mt-2">
+              <svg class="w-5 h-5 text-rdc-bleu" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5 9V7a1 1 0 011-1h8a1 1 0 011 1v2M5 9c0 1.657-4 4-4 4s4 2.343 4 4v2a1 1 0 001 1h8a1 1 0 001-1v-2c0-1.657 4-2.343 4-4M5 9h10"></path>
+              </svg>
+              <span class="text-lg text-rdc-noir font-semibold">
+                {% if logo.language == 'fr' %}
+                  Français
+                {% elif logo.language == 'lingala' %}
+                  Lingala
+                {% elif logo.language == 'swahili' %}
+                  Swahili
+                {% else %}
+                  {{ logo.language }}
+                {% endif %}
+              </span>
+            </div>
+          </div>
+
+          <!-- Creation Date -->
+          <div>
+            <label class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Date de création</label>
+            <div class="flex items-center space-x-2 mt-2">
+              <svg class="w-5 h-5 text-rdc-rouge" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h12a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="text-lg text-rdc-noir font-semibold">
+                {{ logo.created_at.strftime('%d %B %Y à %H:%M') }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Last Updated -->
+          <div>
+            <label class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Dernière mise à jour</label>
+            <div class="flex items-center space-x-2 mt-2">
+              <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="text-lg text-rdc-noir font-semibold">
+                {{ logo.updated_at.strftime('%d %B %Y') }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions Card -->
+      <div class="bg-white rounded-lg shadow-md p-8">
+        <h3 class="text-xl font-bold text-rdc-noir mb-6">Actions</h3>
+
+        <div class="space-y-3">
+          <!-- Share Button -->
+          <button
+            type="button"
+            class="w-full flex items-center justify-center space-x-2 px-6 py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-opacity-90 transition"
+            onclick="shareLogo({{ logo.id }})"
+            title="Créer un lien de partage"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C9.589 12.938 10 12.049 10 11c0-1.657-1.343-3-3-3s-3 1.343-3 3 1.343 3 3 3c.981 0 1.85-.353 2.53-.92l6.86 3.83c.15.84.75 1.54 1.53 1.84m0 0a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            <span>Partager</span>
+          </button>
+
+          <!-- Delete Button -->
+          <button
+            type="button"
+            class="w-full flex items-center justify-center space-x-2 px-6 py-3 bg-rdc-rouge text-white rounded-lg font-semibold hover:bg-opacity-90 transition"
+            onclick="deleteLogo({{ logo.id }}, '{{ logo.institution_name }}')"
+            title="Supprimer ce logo"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+            <span>Supprimer</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Share Modal -->
+<div id="share-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-8">
+    <h3 class="text-xl font-bold text-rdc-noir mb-4">Partager le Logo</h3>
+
+    <div id="share-loading" class="hidden text-center py-8">
+      <svg class="w-8 h-8 text-rdc-bleu mx-auto animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <p class="text-gray-600 mt-4">Création du lien de partage...</p>
+    </div>
+
+    <div id="share-content" class="hidden space-y-4">
+      <p class="text-sm text-gray-700">
+        Ce lien permet à d'autres personnes de voir et télécharger ce logo sans se connecter.
+      </p>
+
+      <div class="relative">
+        <input
+          type="text"
+          id="share-url"
+          class="input-field"
+          readonly
+        >
+        <button
+          type="button"
+          id="copy-btn"
+          class="absolute right-2 top-2 px-3 py-1 bg-rdc-bleu text-white text-sm rounded hover:bg-opacity-90 transition"
+          onclick="copyToClipboard()"
+        >
+          Copier
+        </button>
+      </div>
+
+      <p id="copy-success" class="hidden text-sm text-green-600 font-semibold">
+        ✓ Lien copié dans le presse-papiers!
+      </p>
+
+      <div class="flex space-x-3">
+        <button
+          type="button"
+          class="flex-1 btn-outline"
+          onclick="closeShareModal()"
+        >
+          Fermer
+        </button>
+        <button
+          type="button"
+          id="share-open-btn"
+          class="flex-1 btn-primary"
+          onclick="openShareURL()"
+        >
+          Ouvrir
+        </button>
+      </div>
+    </div>
+
+    <div id="share-error" class="hidden text-center py-8">
+      <p id="share-error-message" class="text-rdc-rouge font-semibold"></p>
+      <button
+        type="button"
+        class="mt-4 btn-outline w-full"
+        onclick="closeShareModal()"
+      >
+        Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-8">
+    <h3 class="text-xl font-bold text-rdc-noir mb-4">Confirmer la suppression</h3>
+    <p id="delete-message" class="text-gray-700 mb-6"></p>
+
+    <div class="flex space-x-4">
+      <button
+        type="button"
+        class="flex-1 btn-outline"
+        onclick="closeDeleteModal()"
+      >
+        Annuler
+      </button>
+      <button
+        type="button"
+        id="confirm-delete-btn"
+        class="flex-1 btn-secondary"
+        onclick="confirmDelete()"
+      >
+        Supprimer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+let currentShareLogoId = null;
+let currentDeleteLogoId = null;
+
+// Get CSRF token from DOM
+function getCsrfToken() {
+  const token = document.querySelector('input[name="csrf_token"]')?.value;
+  return token || '';
+}
+
+// Download
+function downloadLogo(logoId, format) {
+  const url = `{{ url_for('public.download', logo_id='LOGO_ID', format='FORMAT') }}`
+    .replace('LOGO_ID', logoId)
+    .replace('FORMAT', format);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `logo_${logoId}.${format}`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// Share
+function shareLogo(logoId) {
+  currentShareLogoId = logoId;
+  const modal = document.getElementById('share-modal');
+  const loading = document.getElementById('share-loading');
+  const content = document.getElementById('share-content');
+  const error = document.getElementById('share-error');
+
+  modal.classList.remove('hidden');
+  loading.classList.remove('hidden');
+  content.classList.add('hidden');
+  error.classList.add('hidden');
+  document.getElementById('copy-success').classList.add('hidden');
+
+  fetch('{{ url_for("public.api_share") }}', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCsrfToken()
+    },
+    body: JSON.stringify({
+      logo_id: logoId
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    loading.classList.add('hidden');
+    if (data.share_url) {
+      document.getElementById('share-url').value = data.share_url;
+      content.classList.remove('hidden');
+    } else {
+      document.getElementById('share-error-message').textContent = data.error || 'Erreur lors du partage';
+      error.classList.remove('hidden');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    loading.classList.add('hidden');
+    document.getElementById('share-error-message').textContent = 'Erreur réseau';
+    error.classList.remove('hidden');
+  });
+}
+
+function closeShareModal() {
+  document.getElementById('share-modal').classList.add('hidden');
+}
+
+function copyToClipboard() {
+  const url = document.getElementById('share-url');
+  const text = url.value;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        showCopySuccess();
+      })
+      .catch(() => {
+        fallbackCopy(text);
+      });
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.opacity = '0';
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textArea);
+  showCopySuccess();
+}
+
+function showCopySuccess() {
+  const success = document.getElementById('copy-success');
+  success.classList.remove('hidden');
+  setTimeout(() => {
+    success.classList.add('hidden');
+  }, 3000);
+}
+
+function openShareURL() {
+  const url = document.getElementById('share-url').value;
+  window.open(url, '_blank');
+}
+
+// Delete
+function deleteLogo(logoId, institutionName) {
+  currentDeleteLogoId = logoId;
+  const modal = document.getElementById('delete-modal');
+  const message = document.getElementById('delete-message');
+
+  message.textContent = `Êtes-vous sûr de vouloir supprimer le logo de "${institutionName}"? Cette action ne peut pas être annulée.`;
+  modal.classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+  document.getElementById('delete-modal').classList.add('hidden');
+  currentDeleteLogoId = null;
+}
+
+function confirmDelete() {
+  if (!currentDeleteLogoId) return;
+
+  const button = document.getElementById('confirm-delete-btn');
+  button.disabled = true;
+  button.textContent = 'Suppression en cours...';
+
+  fetch(`{{ url_for('dashboard.delete_logo', logo_id='LOGO_ID') }}`.replace('LOGO_ID', currentDeleteLogoId), {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCsrfToken()
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Redirect to history after successful deletion
+      window.location.href = '{{ url_for("dashboard.history") }}';
+    } else {
+      alert('Erreur: ' + (data.error || 'Impossible de supprimer le logo'));
+      button.disabled = false;
+      button.textContent = 'Supprimer';
+      closeDeleteModal();
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Erreur réseau lors de la suppression');
+    button.disabled = false;
+    button.textContent = 'Supprimer';
+    closeDeleteModal();
+  });
+}
+</script>
+{% endblock %}
