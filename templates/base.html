@@ -115,15 +115,16 @@
     .logo-badge {
       width: 48px;
       height: 48px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-inverse);
-      font-weight: 700;
-      font-size: var(--text-lg);
       box-shadow: var(--elevation-2);
+    }
+
+    .logo-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .logo-text {
@@ -315,7 +316,9 @@
     <div class="page-container" style="padding: var(--space-4);">
       <!-- Left: Logo -->
       <a href="/" class="logo-section">
-        <div class="logo-badge">RDC</div>
+        <div class="logo-badge">
+          <img src="{{ url_for('static', filename='assets/armoiries.png') }}" alt="Armoirie RDC">
+        </div>
         <span class="logo-text">Générateur de Logos</span>
       </a>
 
