@@ -20,6 +20,7 @@
           <tr style="background-color: var(--bg-app); border-bottom: 1px solid var(--border-soft);">
             <th style="padding: var(--space-4); text-align: left; font-weight: 600; color: var(--text-secondary); font-size: var(--text-sm);">Email</th>
             <th style="padding: var(--space-4); text-align: left; font-weight: 600; color: var(--text-secondary); font-size: var(--text-sm);">Nom complet</th>
+            <th style="padding: var(--space-4); text-align: left; font-weight: 600; color: var(--text-secondary); font-size: var(--text-sm);">Ministère</th>
             <th style="padding: var(--space-4); text-align: left; font-weight: 600; color: var(--text-secondary); font-size: var(--text-sm);">Rôle</th>
             <th style="padding: var(--space-4); text-align: left; font-weight: 600; color: var(--text-secondary); font-size: var(--text-sm);">Statut</th>
             <th style="padding: var(--space-4); text-align: left; font-weight: 600; color: var(--text-secondary); font-size: var(--text-sm);">Date création</th>
@@ -35,6 +36,9 @@
                 </td>
                 <td style="padding: var(--space-4); font-size: var(--text-sm);">
                   {{ user.full_name or 'N/A' }}
+                </td>
+                <td style="padding: var(--space-4); font-size: var(--text-sm);">
+                  {{ user.ministry or 'N/A' }}
                 </td>
                 <td style="padding: var(--space-4); font-size: var(--text-sm);">
                   {% if user.role == 'admin' %}
@@ -56,17 +60,19 @@
                 <td style="padding: var(--space-4); text-align: center;">
                   <button
                     class="btn btn-secondary btn-sm"
-                    onclick="openEditModal({{ user.id }}, '{{ user.email }}', '{{ user.full_name or '' }}', '{{ user.role }}', {{ 'true' if user.is_active else 'false' }})"
+                    onclick="openUserModal({{ user.id }}, '{{ user.email }}', '{{ user.full_name or '' }}', '{{ user.ministry or '' }}', '{{ user.role }}', {{ user.is_active|lower }})"
                     style="margin-right: var(--space-2);"
                   >
-                    Éditer
+                    Modifier
                   </button>
+                  <a href="{{ url_for('admin.user_profile', user_id=user.id) }}" class="btn btn-outline" style="padding: var(--space-2) var(--space-3); font-size: var(--text-sm); text-decoration: none; margin-right: var(--space-2);">Profil</a>
+                  <button onclick="deleteUser({{ user.id }})" class="btn btn-outline" style="padding: var(--space-2) var(--space-3); font-size: var(--text-sm); color: var(--color-error); border-color: var(--color-error);">Supprimer</button>
                 </td>
               </tr>
             {% endfor %}
           {% else %}
             <tr>
-              <td colspan="6" style="padding: var(--space-8); text-align: center; color: var(--text-secondary);">
+              <td colspan="7" style="padding: var(--space-8); text-align: center; color: var(--text-secondary);">
                 Aucun utilisateur trouvé.
               </td>
             </tr>
@@ -78,82 +84,66 @@
 </div>
 
 <!-- Edit User Modal -->
-<div id="editModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; align-items: center; justify-content: center;">
-  <div style="background: white; border-radius: var(--radius-lg); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; padding: var(--space-6);">
+<div id="editUserModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; align-items: center; justify-content: center;">
+  <div style="background: white; border-radius: var(--radius-lg); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; padding: var(--space-6); max-height: 90vh; overflow-y: auto;">
     <!-- Modal Header -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
       <h2 style="font-size: var(--text-2xl); font-weight: 700;">Éditer utilisateur</h2>
-      <button onclick="closeEditModal()" style="background: none; border: none; font-size: var(--text-2xl); cursor: pointer; color: var(--text-secondary);">×</button>
+      <button onclick="closeEditUserModal()" style="background: none; border: none; font-size: var(--text-2xl); cursor: pointer; color: var(--text-secondary);">×</button>
     </div>
 
     <!-- Modal Form -->
-    <form id="editForm" method="POST">
-      <input type="hidden" id="userId" name="user_id" value="">
+    <form id="editUserForm" style="display: flex; flex-direction: column; gap: var(--space-4);">
+      <input type="hidden" id="userId" name="user_id">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-      <!-- Email Field (Read-only) -->
-      <div style="margin-bottom: var(--space-4);">
-        <label style="display: block; font-weight: 600; margin-bottom: var(--space-2);">Email</label>
-        <input
-          type="text"
-          id="userEmail"
-          readonly
-          style="width: 100%; padding: var(--space-2) var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-md); background-color: var(--bg-app); color: var(--text-secondary);"
-        >
+      <div>
+        <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Email</label>
+        <input type="text" id="userEmail" readonly style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); background-color: var(--bg-subtle); color: var(--text-secondary); width: 100%;">
       </div>
 
-      <!-- Full Name Field -->
-      <div style="margin-bottom: var(--space-4);">
-        <label style="display: block; font-weight: 600; margin-bottom: var(--space-2);">Nom complet</label>
-        <input
-          type="text"
-          id="userFullName"
-          name="full_name"
-          placeholder="Ex: Jean Dupont"
-          style="width: 100%; padding: var(--space-2) var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-md);"
-        >
+      <div>
+        <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Nom Complet</label>
+        <input type="text" id="userFullName" style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%;">
       </div>
 
-      <!-- Role Field -->
-      <div style="margin-bottom: var(--space-4);">
-        <label style="display: block; font-weight: 600; margin-bottom: var(--space-2);">Rôle</label>
-        <select
-          id="userRole"
-          name="role"
-          style="width: 100%; padding: var(--space-2) var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-md);"
-        >
+      <div>
+        <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Ministère</label>
+        <input type="text" id="userMinistry" style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%;">
+      </div>
+
+      <div style="border-top: 1px solid var(--border-soft); padding-top: var(--space-4);">
+        <h4 style="margin-bottom: var(--space-4);">Changer le Mot de Passe (Optionnel)</h4>
+
+        <div>
+          <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Nouveau Mot de Passe</label>
+          <input type="password" id="userNewPassword" placeholder="Laisser vide pour ne pas changer" style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%; margin-bottom: var(--space-4);">
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Confirmer le Mot de Passe</label>
+          <input type="password" id="userNewPasswordConfirm" placeholder="Confirmer le nouveau mot de passe" style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%;">
+        </div>
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: var(--space-2); font-weight: 500;">Rôle</label>
+        <select id="userRole" name="role" style="padding: var(--space-3); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); width: 100%;">
           <option value="user">Utilisateur</option>
           <option value="admin">Admin</option>
         </select>
       </div>
 
-      <!-- Active Status Field -->
-      <div style="margin-bottom: var(--space-6);">
-        <label style="display: flex; align-items: center; cursor: pointer;">
-          <input
-            type="checkbox"
-            id="userIsActive"
-            name="is_active"
-            style="margin-right: var(--space-2); width: 18px; height: 18px; cursor: pointer;"
-          >
-          <span style="font-weight: 600;">Utilisateur actif</span>
+      <div>
+        <label style="display: flex; align-items: center; gap: var(--space-2); font-weight: 500;">
+          <input type="checkbox" id="userActive" name="is_active" style="width: 18px; height: 18px;">
+          <span>Compte actif</span>
         </label>
       </div>
 
-      <!-- Modal Footer -->
-      <div style="display: flex; gap: var(--space-3); justify-content: flex-end;">
-        <button
-          type="button"
-          onclick="closeEditModal()"
-          class="btn btn-outline"
-        >
-          Annuler
-        </button>
-        <button
-          type="submit"
-          class="btn btn-primary"
-        >
-          Enregistrer les modifications
-        </button>
+      <div style="display: flex; gap: var(--space-4); margin-top: var(--space-4);">
+        <button type="button" onclick="closeEditUserModal()" class="btn btn-outline" style="flex: 1;">Annuler</button>
+        <button type="submit" class="btn btn-primary" style="flex: 1;">Enregistrer</button>
       </div>
     </form>
   </div>
@@ -161,61 +151,94 @@
 
 <!-- Scripts -->
 <script>
-  function openEditModal(userId, email, fullName, role, isActive) {
+  function openUserModal(userId, email, fullName, ministry, role, isActive) {
     document.getElementById('userId').value = userId;
     document.getElementById('userEmail').value = email;
     document.getElementById('userFullName').value = fullName;
+    document.getElementById('userMinistry').value = ministry;
     document.getElementById('userRole').value = role;
-    document.getElementById('userIsActive').checked = isActive;
-    document.getElementById('editModal').style.display = 'flex';
+    document.getElementById('userActive').checked = isActive;
+    document.getElementById('userNewPassword').value = '';
+    document.getElementById('userNewPasswordConfirm').value = '';
+    document.getElementById('editUserModal').style.display = 'flex';
   }
 
-  function closeEditModal() {
-    document.getElementById('editModal').style.display = 'none';
+  function closeEditUserModal() {
+    document.getElementById('editUserModal').style.display = 'none';
+  }
+
+  function deleteUser(userId) {
+    if (confirm('Êtes-vous certain de vouloir supprimer cet utilisateur? Cette action est irréversible.')) {
+      fetch(`/api/admin/users/${userId}/delete`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.querySelector('input[name="csrf_token"]').value
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          location.reload();
+        } else {
+          alert('Erreur lors de la suppression');
+        }
+      });
+    }
   }
 
   // Close modal when clicking outside
-  document.getElementById('editModal').addEventListener('click', function(e) {
+  document.getElementById('editUserModal').addEventListener('click', function(e) {
     if (e.target === this) {
-      closeEditModal();
+      closeEditUserModal();
     }
   });
 
   // Handle form submission
-  document.getElementById('editForm').addEventListener('submit', function(e) {
+  document.getElementById('editUserForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-
     const userId = document.getElementById('userId').value;
+    const fullName = document.getElementById('userFullName').value;
+    const ministry = document.getElementById('userMinistry').value;
     const role = document.getElementById('userRole').value;
-    const isActive = document.getElementById('userIsActive').checked;
+    const isActive = document.getElementById('userActive').checked;
+    const newPassword = document.getElementById('userNewPassword').value;
+    const newPasswordConfirm = document.getElementById('userNewPasswordConfirm').value;
 
-    // Send API request
-    fetch(`/api/admin/users/${userId}`, {
+    if (newPassword && newPassword !== newPasswordConfirm) {
+      alert('Les mots de passe ne correspondent pas');
+      return;
+    }
+
+    if (newPassword && newPassword.length < 6) {
+      alert('Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+
+    const data = {
+      role: role,
+      is_active: isActive,
+      full_name: fullName,
+      ministry: ministry
+    };
+
+    if (newPassword) {
+      data.password = newPassword;
+    }
+
+    const response = await fetch(`/api/admin/users/${userId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': document.querySelector('input[name=csrf_token]')?.value || ''
+        'X-CSRFToken': document.querySelector('input[name="csrf_token"]').value
       },
-      body: JSON.stringify({
-        role: role,
-        is_active: isActive
-      })
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      closeEditModal();
-      // Reload the page to show updated user list
-      location.reload();
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Erreur lors de la mise à jour de l\'utilisateur: ' + error.message);
+      body: JSON.stringify(data)
     });
+
+    if (response.ok) {
+      location.reload();
+    } else {
+      const error = await response.json();
+      alert('Erreur: ' + (error.error || 'Erreur lors de la modification'));
+    }
   });
 </script>
 
