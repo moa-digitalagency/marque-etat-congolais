@@ -281,6 +281,19 @@
       // Use 'input' event (modern standard), not 'keyup' to avoid duplicate filtering
       searchInput.addEventListener('input', filterLogos);
     }
+
+    // Add event listeners for delete buttons
+    const deleteButtons = document.querySelectorAll('.delete-logo-btn');
+    console.log(`Found ${deleteButtons.length} delete buttons`);
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const logoId = this.getAttribute('data-logo-id');
+        const institutionName = this.getAttribute('data-institution-name');
+        console.log('Delete button clicked:', { logoId, institutionName });
+        deleteLogo(parseInt(logoId), institutionName);
+      });
+    });
   }
 
   /**

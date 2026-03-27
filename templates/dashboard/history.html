@@ -170,9 +170,10 @@
 
                 <button
                   type="button"
-                  class="btn btn-sm"
+                  class="btn btn-sm delete-logo-btn"
                   style="flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--space-1); background-color: var(--rdc-rouge); color: var(--text-inverse); border: none; text-decoration: none;"
-                  onclick="deleteLogo({{ logo.id }}, {{ logo.institution_name|tojson }})"
+                  data-logo-id="{{ logo.id }}"
+                  data-institution-name="{{ logo.institution_name }}"
                   title="Supprimer ce logo"
                 >
                   <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
