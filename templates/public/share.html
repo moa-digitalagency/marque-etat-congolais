@@ -39,9 +39,9 @@
 
           <!-- Version White sur Fond Bleu -->
           <div style="display: flex; align-items: center; justify-content: center; height: 400px; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: var(--space-8);">
-            {% if logo.preview_url_white %}
+            {% if logo.file_path_png_white %}
               <img
-                src="{{ logo.preview_url_white }}"
+                src="/download/{{ logo.id }}?format=png_white"
                 alt="Logo white: {{ logo.institution_name }}"
                 style="max-height: 100%; max-width: 100%; object-fit: contain;"
               >
