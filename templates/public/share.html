@@ -52,6 +52,19 @@
             </a>
 
             <a
+              href="{{ png_white_url }}"
+              download="logo_{{ logo.institution_name|replace(' ', '_') }}_white.png"
+              class="btn btn-outline"
+              style="display: flex; align-items: center; justify-content: center; gap: var(--space-2); text-decoration: none; background-color: #6b7280; color: white; border-color: #6b7280;"
+              title="Télécharger la version blanche du logo"
+            >
+              <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              <span>Télécharger PNG (Blanc)</span>
+            </a>
+
+            <a
               href="{{ jpg_url }}"
               download="logo_{{ logo.institution_name|replace(' ', '_') }}.jpg"
               class="btn btn-outline"
