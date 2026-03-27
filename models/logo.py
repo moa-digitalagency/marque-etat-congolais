@@ -18,6 +18,7 @@ class LogoGeneration(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
+    template = db.relationship('Template', backref='logos', lazy=True)
     shared_links = db.relationship('SharedLink', backref='logo', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):

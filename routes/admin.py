@@ -5,9 +5,11 @@ Handles admin panel routes for user management and system administration.
 """
 
 from functools import wraps
+from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from models import db, User
+from models.logo import LogoGeneration
 from services.auth_service import AuthService
 
 admin_bp = Blueprint('admin', __name__, template_folder='../templates')
@@ -96,3 +98,40 @@ def create_user():
             return render_template('admin/create_user.html')
 
     return render_template('admin/create_user.html')
+
+
+@admin_bp.route('/users/<int:user_id>/profile')
+@login_required
+@admin_required
+def user_profile(user_id):
+    """Display user profile and statistics"""
+    user = User.query.get_or_404(user_id)
+
+    # Get stats
+    total_logos = LogoGeneration.query.filter_by(user_id=user_id).count()
+
+    # Logos this month
+    first_day_of_month = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    logos_this_month = LogoGeneration.query.filter(
+        LogoGeneration.user_id == user_id,
+        LogoGeneration.created_at >= first_day_of_month
+    ).count()
+
+    # Recent logos
+    recent_logos = LogoGeneration.query.filter_by(user_id=user_id).order_by(
+        LogoGeneration.created_at.desc()
+    ).limit(10).all()
+
+    # Last logo date
+    last_logo = LogoGeneration.query.filter_by(user_id=user_id).order_by(
+        LogoGeneration.created_at.desc()
+    ).first()
+    last_logo_date = last_logo.created_at.strftime('%d %b %Y') if last_logo else None
+
+    return render_template('admin/user_profile.html',
+        user=user,
+        total_logos=total_logos,
+        logos_this_month=logos_this_month,
+        last_logo_date=last_logo_date,
+        recent_logos=recent_logos
+    )
