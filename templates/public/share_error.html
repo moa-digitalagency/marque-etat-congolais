@@ -3,39 +3,39 @@
 {% block title %}Erreur - Générateur de Logos RDC{% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-  <div class="text-center">
+<div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: var(--space-8) var(--space-4);">
+  <div style="text-align: center;">
     <!-- Icon -->
-    <div class="mb-6">
-      <svg class="w-24 h-24 text-rdc-rouge mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div style="margin-bottom: var(--space-6);">
+      <svg style="width: 96px; height: 96px; color: var(--rdc-rouge); margin: 0 auto;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
       </svg>
     </div>
 
     <!-- Error Message -->
-    <h1 class="text-4xl font-bold text-rdc-noir mb-2">Une Erreur s'est Produite</h1>
-    <p class="text-xl text-gray-600 mb-4">
+    <h1 style="font-size: var(--text-4xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">Une Erreur s'est Produite</h1>
+    <p style="font-size: var(--text-lg); color: var(--text-secondary); margin-bottom: var(--space-4);">
       {{ error or 'Erreur serveur' }}
     </p>
 
     <!-- Description -->
-    <p class="text-gray-500 mb-8 max-w-md mx-auto">
+    <p style="color: var(--text-secondary); margin-bottom: var(--space-8); max-width: 300px; margin-left: auto; margin-right: auto;">
       Une erreur inattendue s'est produite lors du traitement de votre demande. Veuillez réessayer plus tard.
     </p>
 
     <!-- Action Buttons -->
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a href="{{ url_for('index') }}" class="px-6 py-3 bg-rdc-bleu text-white font-bold rounded-lg hover:bg-opacity-90 transition">
+    <div style="display: flex; flex-direction: column; gap: var(--space-3); justify-content: center; max-width: 400px; margin: 0 auto;">
+      <a href="{{ url_for('index') }}" class="btn btn-primary" style="text-decoration: none; text-align: center;">
         Accueil
       </a>
-      <a href="{{ url_for('auth.login') }}" class="px-6 py-3 border-2 border-rdc-bleu text-rdc-bleu font-bold rounded-lg hover:bg-rdc-bleu hover:text-white transition">
+      <a href="{{ url_for('auth.login') }}" class="btn btn-outline" style="text-decoration: none; text-align: center;">
         Se connecter
       </a>
     </div>
 
     <!-- Support -->
-    <div class="mt-8 p-4 bg-red-50 border-l-4 border-rdc-rouge rounded max-w-md mx-auto">
-      <p class="text-xs text-gray-700">
+    <div class="alert alert-error" style="margin-top: var(--space-8); max-width: 300px; margin-left: auto; margin-right: auto;">
+      <p style="font-size: var(--text-xs); margin-bottom: 0;">
         <strong>Besoin d'aide?</strong> Contactez-nous pour un support technique.
       </p>
     </div>
