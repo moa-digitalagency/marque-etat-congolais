@@ -13,10 +13,21 @@
   <meta name="twitter:title" content="{{ logo.institution_name }} - Logo RDC">
   <meta name="twitter:description" content="Logo généré avec le Générateur de Logos Officiels de la RDC">
   <meta name="twitter:image" content="{{ request.host_url.rstrip('/') }}{{ logo.preview_url }}">
+  <style>
+    /* Hide sidebar on share page */
+    .sidebar {
+      display: none !important;
+    }
+    /* Full width without sidebar margin */
+    .main-content {
+      margin-left: 0 !important;
+      width: 100% !important;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
-<div style="max-width: 900px; margin: 0 auto; padding: var(--space-8) var(--space-4);">
+<div style="max-width: 1400px; margin: 0 auto; padding: var(--space-8) var(--space-4);">
   <!-- Header -->
   <div style="text-align: center; margin-bottom: var(--space-12);">
     <h1 style="font-size: var(--text-4xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">
@@ -25,7 +36,7 @@
     <p style="color: var(--text-secondary); margin-bottom: 0;">Logo généré avec le Générateur de Logos de la RDC</p>
   </div>
 
-  <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-8);">
+  <div class="share-content-grid">
     <!-- Left Column: Logo Display -->
     <div>
       <!-- Logo Card -->
@@ -113,6 +124,57 @@
         </div>
       </div>
     </div>
+
+    <!-- Right Column: Details -->
+    <div>
+      <!-- Details Card -->
+      <div class="card" style="padding: var(--space-6);">
+        <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-6);">Détails</h3>
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-6);">
+          <!-- Institution -->
+          <div>
+            <p style="font-size: var(--text-sm); color: var(--text-secondary); font-weight: 500; margin-bottom: var(--space-2);">Institution</p>
+            <p style="font-size: var(--text-base); font-weight: 600; color: var(--text-primary); margin-bottom: 0; word-break: break-word;">{{ logo.institution_name }}</p>
+          </div>
+
+          <!-- Template -->
+          <div>
+            <p style="font-size: var(--text-sm); color: var(--text-secondary); font-weight: 500; margin-bottom: var(--space-2);">Template</p>
+            <p style="font-size: var(--text-base); font-weight: 600; color: var(--text-primary); margin-bottom: 0;">
+              {{ logo.template.name if logo.template else 'N/A' }}
+            </p>
+          </div>
+
+          <!-- Language -->
+          <div>
+            <p style="font-size: var(--text-sm); color: var(--text-secondary); font-weight: 500; margin-bottom: var(--space-2);">Langue</p>
+            <p style="font-size: var(--text-base); font-weight: 600; color: var(--text-primary); margin-bottom: 0;">
+              {% if logo.language == 'fr' %}Français
+              {% elif logo.language == 'lingala' %}Lingala
+              {% elif logo.language == 'swahili' %}Swahili
+              {% else %}{{ logo.language }}{% endif %}
+            </p>
+          </div>
+
+          <!-- Creation Date -->
+          <div>
+            <p style="font-size: var(--text-sm); color: var(--text-secondary); font-weight: 500; margin-bottom: var(--space-2);">Créé le</p>
+            <p style="font-size: var(--text-base); font-weight: 600; color: var(--text-primary); margin-bottom: 0;">{{ logo.created_at.strftime('%d %b %Y à %H:%M') }}</p>
+          </div>
+
+          <!-- Share Button -->
+          <div style="border-top: 1px solid var(--border-soft); padding-top: var(--space-4); margin-top: var(--space-2);">
+            <button onclick="copyShareLink()" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; gap: var(--space-2); text-decoration: none; width: 100%; border: none; cursor: pointer;">
+              <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+              </svg>
+              <span>Copier le lien</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Footer Note -->
@@ -121,15 +183,49 @@
   </div>
 </div>
 
+<script>
+  function copyShareLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = event.target.closest('button');
+      const span = btn.querySelector('span');
+      if (span) {
+        span.textContent = 'Lien copié!';
+      }
+      btn.style.backgroundColor = 'var(--color-success)';
+      btn.style.borderColor = 'var(--color-success)';
+
+      setTimeout(() => {
+        location.reload();
+      }, 1500);
+    }).catch(err => {
+      alert('Erreur lors de la copie du lien');
+    });
+  }
+</script>
+
 <style>
+  /* Main content grid */
+  .share-content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-8);
+  }
+
   /* Responsive Design */
   @media (max-width: 1024px) {
     main > div {
       padding: var(--space-6) var(--space-3) !important;
+      max-width: 1200px !important;
     }
 
     h1 {
       font-size: var(--text-3xl) !important;
+    }
+
+    .share-content-grid {
+      grid-template-columns: 1.5fr 1fr;
+      gap: var(--space-6);
     }
   }
 
@@ -155,6 +251,12 @@
     button, a {
       padding: var(--space-3) var(--space-4) !important;
       font-size: var(--text-sm) !important;
+    }
+
+    /* One column on tablet (details below logo) */
+    .share-content-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
     }
   }
 
@@ -191,6 +293,17 @@
     svg {
       width: 16px !important;
       height: 16px !important;
+    }
+
+    /* Logo previews smaller on mobile */
+    .card > div > div > div {
+      height: 250px !important;
+    }
+
+    /* Details in single column */
+    .share-content-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
     }
   }
 </style>
