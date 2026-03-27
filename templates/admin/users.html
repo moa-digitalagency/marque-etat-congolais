@@ -184,8 +184,38 @@
   // Handle form submission
   document.getElementById('editForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    // Form submission will be handled by Task 3 (API endpoint)
-    alert('Fonctionnalité d\'édition à être implémentée');
+
+    const userId = document.getElementById('userId').value;
+    const role = document.getElementById('userRole').value;
+    const isActive = document.getElementById('userIsActive').checked;
+
+    // Send API request
+    fetch(`/api/admin/users/${userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('input[name=csrf_token]')?.value || ''
+      },
+      body: JSON.stringify({
+        role: role,
+        is_active: isActive
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      closeEditModal();
+      // Reload the page to show updated user list
+      location.reload();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Erreur lors de la mise à jour de l\'utilisateur: ' + error.message);
+    });
   });
 </script>
 
