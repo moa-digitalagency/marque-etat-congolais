@@ -251,18 +251,14 @@
       font-size: var(--text-sm);
     }
 
-    /* Footer styling with sidebar */
+    /* Footer - full width at bottom */
     footer {
-      margin-left: var(--sidebar-width);
-      transition: margin-left var(--transition-slow);
+      width: 100%;
+      clear: both;
     }
 
     /* Responsive - Sidebar collapse on mobile */
     @media (max-width: 1023px) {
-      main, footer {
-        margin-left: 0;
-      }
-
       .sidebar {
         transform: translateX(-100%);
       }
