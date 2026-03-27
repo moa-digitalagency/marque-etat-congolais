@@ -156,8 +156,8 @@
 </div>
 
 <!-- Share Modal -->
-<div id="share-modal" class="modal-overlay" style="display: none;">
-  <div class="modal">
+<div id="share-modal" class="modal-overlay" style="display: none; z-index: 1000;">
+  <div class="modal" style="max-width: 700px;">
     <div class="modal-header">
       <h3 style="margin-bottom: 0;">Partager le Logo</h3>
       <button type="button" onclick="closeShareModal()" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0; font-size: var(--text-xl);">
@@ -176,26 +176,50 @@
 
       <!-- Success State -->
       <div id="share-content" style="display: none;">
-        <p style="font-family: var(--font-complement); font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-4);">
-          Ce lien permet à d'autres personnes de voir et télécharger ce logo sans se connecter.
-        </p>
+        <!-- Logo Preview Section -->
+        <div style="margin-bottom: var(--space-8); padding: var(--space-6); background-color: var(--bg-app); border-radius: var(--radius-lg); text-align: center;">
+          <h4 style="font-size: var(--text-sm); font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: var(--space-4);">Aperçu du Logo</h4>
 
-        <div style="position: relative; margin-bottom: var(--space-4);">
-          <input type="text" id="share-url" class="input" readonly style="padding-right: 100px;" />
-          <button type="button" id="copy-btn" class="btn btn-primary btn-sm" onclick="copyToClipboard()" style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); gap: 4px;">
-            Copier
-          </button>
+          <!-- White Logo on Dark Blue Background -->
+          <div style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); border-radius: var(--radius-lg); padding: var(--space-6); margin-bottom: var(--space-4); display: flex; align-items: center; justify-content: center; min-height: 200px;">
+            <img id="share-preview-white" src="" alt="Logo blanc aperçu" style="max-height: 180px; max-width: 100%; object-fit: contain;" />
+          </div>
+
+          <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: 0;">Logo blanc sur fond bleu foncé</p>
         </div>
 
-        <p id="copy-success" style="display: none; font-size: var(--text-sm); color: var(--color-success); font-family: var(--font-principale); font-weight: 600; margin-bottom: var(--space-4);">
-          ✓ Lien copié !
+        <!-- Share Information -->
+        <p style="font-family: var(--font-complement); font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-6); padding: var(--space-4); background-color: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary); border-radius: var(--radius-md);">
+          <strong>Ce lien de partage :</strong> Permet à d'autres personnes de voir et télécharger ce logo sans créer de compte.
         </p>
 
-        <div style="display: flex; gap: var(--space-3);">
+        <!-- Share URL Input -->
+        <div style="margin-bottom: var(--space-6);">
+          <label style="font-size: var(--text-xs); font-weight: 600; color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: var(--space-2);">Lien de partage</label>
+          <div style="position: relative;">
+            <input type="text" id="share-url" class="input" readonly style="padding-right: 110px; font-family: monospace; font-size: var(--text-xs);" />
+            <button type="button" id="copy-btn" class="btn btn-primary btn-sm" onclick="copyShareUrl()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); gap: var(--space-1); white-space: nowrap;">
+              <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+              </svg>
+              Copier
+            </button>
+          </div>
+        </div>
+
+        <p id="copy-success" style="display: none; font-size: var(--text-sm); color: var(--color-success); font-family: var(--font-principale); font-weight: 600; margin-bottom: var(--space-4); text-align: center;">
+          ✓ Lien copié dans le presse-papiers !
+        </p>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--border-soft);">
           <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeShareModal()">
             Fermer
           </button>
-          <button type="button" id="share-open-btn" class="btn btn-primary" style="flex: 1;" onclick="openShareURL()">
+          <button type="button" id="share-open-btn" class="btn btn-primary" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--space-2);" onclick="openShareURL()">
+            <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
             Ouvrir
           </button>
         </div>

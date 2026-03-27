@@ -177,6 +177,12 @@
     if (content) content.style.display = 'none';
     if (error) error.style.display = 'none';
 
+    // Set white logo preview
+    const previewImg = document.getElementById('share-preview-white');
+    if (previewImg) {
+      previewImg.src = `/download/${currentLogoId}?format=png_white`;
+    }
+
     // Reset copy success message
     const copySuccess = document.getElementById('copy-success');
     if (copySuccess) copySuccess.style.display = 'none';
@@ -195,7 +201,7 @@
       if (data.share_url) {
         const shareUrl = document.getElementById('share-url');
         if (shareUrl) shareUrl.value = data.share_url;
-        if (content) content.style.display = 'flex';
+        if (content) content.style.display = 'block';
       } else {
         const errorMsg = document.getElementById('share-error-message');
         if (errorMsg) {
