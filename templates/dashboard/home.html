@@ -70,8 +70,8 @@
     <!-- Generate New Logo -->
     <a href="{{ url_for('public.generate') }}" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: var(--radius-lg); box-shadow: var(--elevation-2); padding: var(--space-8); color: var(--text-inverse); text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; min-height: 200px; transition: box-shadow var(--transition-normal);">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
-        <h3 style="font-size: var(--text-2xl); font-weight: 700; margin-bottom: 0;">Générer un nouveau logo</h3>
-        <svg style="width: 40px; height: 40px; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <h3 style="font-size: var(--text-2xl); font-weight: 700; margin-bottom: 0; color: white;">Générer un nouveau logo</h3>
+        <svg style="width: 40px; height: 40px; flex-shrink: 0; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
         </svg>
       </div>
@@ -81,8 +81,8 @@
     <!-- View History -->
     <a href="{{ url_for('dashboard.history') }}" style="background: linear-gradient(135deg, var(--rdc-rouge) 0%, #c41e1e 100%); border-radius: var(--radius-lg); box-shadow: var(--elevation-2); padding: var(--space-8); color: var(--text-inverse); text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; min-height: 200px; transition: box-shadow var(--transition-normal);">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
-        <h3 style="font-size: var(--text-2xl); font-weight: 700; margin-bottom: 0;">Voir l'historique</h3>
-        <svg style="width: 40px; height: 40px; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <h3 style="font-size: var(--text-2xl); font-weight: 700; margin-bottom: 0; color: white;">Voir l'historique</h3>
+        <svg style="width: 40px; height: 40px; flex-shrink: 0; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
         </svg>
       </div>
@@ -199,7 +199,7 @@
     </svg>
     <h3 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">Aucun logo généré</h3>
     <p style="color: var(--text-secondary); margin-bottom: var(--space-6);">Vous n'avez pas encore créé de logo. Commencez maintenant!</p>
-    <a href="{{ url_for('public.generate') }}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: var(--space-2); text-decoration: none;">
+    <a href="{{ url_for('public.generate') }}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: var(--space-2); text-decoration: none; color: white;">
       <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
       </svg>
