@@ -58,7 +58,7 @@
     <!-- Logos Grid -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-6);" id="logos-grid">
       {% for logo in logos %}
-        <div class="card" style="overflow: hidden; padding: 0;" data-institution="{{ logo.institution_name|lower }}">
+        <div class="card" style="overflow: hidden; padding: 0;" data-institution="{{ logo.institution_name|lower }}" data-logo-id="{{ logo.id }}">
           <!-- Logo Preview -->
           <div style="position: relative; height: 192px; background-color: var(--bg-app); display: flex; align-items: center; justify-content: center; overflow: hidden;">
             {% if logo.preview_url %}
