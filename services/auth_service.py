@@ -29,7 +29,7 @@ class AuthService:
         if language not in ['fr', 'lingala', 'swahili']:
             raise ValueError('Langue non supportée')
 
-        user = User(email=email, full_name=full_name, language=language, role=role)
+        user = User(email=email, full_name=full_name, language=language, role=role, ministry=None)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
@@ -64,7 +64,8 @@ class AuthService:
             email=email,
             full_name=full_name,
             role='admin',
-            language='fr'
+            language='fr',
+            ministry=None
         )
         user.set_password(password)
 
