@@ -13,6 +13,7 @@ class User(UserMixin, db.Model):
     full_name = db.Column(db.String(255))
     role = db.Column(db.String(20), default='user')  # 'user' or 'admin'
     language = db.Column(db.String(20), default='fr')  # 'fr', 'lingala', 'swahili'
+    ministry = db.Column(db.String(255), nullable=True)  # Ministry/department name
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     is_active = db.Column(db.Boolean, default=True)
