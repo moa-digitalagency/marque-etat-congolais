@@ -33,17 +33,24 @@ def admin_required(f):
 @login_required
 @admin_required
 def users():
-    """
-    Admin user management page.
-    Displays all users in a table format with edit/delete capabilities.
-    """
-    # Get all users
+    """Display user management page"""
     all_users = User.query.order_by(User.created_at.desc()).all()
 
-    return render_template(
-        'admin/users.html',
+    # Calculate stats
+    total_users = len(all_users)
+    admin_count = sum(1 for u in all_users if u.role == 'admin')
+    user_count = total_users - admin_count
+    active_users = sum(1 for u in all_users if u.is_active)
+    inactive_users = total_users - active_users
+
+    return render_template('admin/users.html',
         users=all_users,
-        total_users=len(all_users)
+        current_user=current_user,
+        total_users=total_users,
+        admin_count=admin_count,
+        user_count=user_count,
+        active_users=active_users,
+        inactive_users=inactive_users
     )
 
 
