@@ -11,7 +11,7 @@ from sqlalchemy import desc
 from sqlalchemy.exc import SQLAlchemyError
 import traceback
 
-from models import db, LogoGeneration, SharedLink, Template
+from models import db, LogoGeneration, SharedLink, Template, User
 from services import TemplateService
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
@@ -132,3 +132,31 @@ def list_logos():
     except Exception as e:
         current_app.logger.error(f'Erreur inattendue: {traceback.format_exc()}')
         return jsonify({'error': 'Erreur serveur'}), 500
+
+
+@api_bp.route('/admin/users/<int:user_id>', methods=['POST'])
+@login_required
+def update_user(user_id):
+    """Update user role and status (admin only)"""
+    if current_user.role != 'admin':
+        return jsonify({'error': 'Accès refusé'}), 403
+
+    user = User.query.get_or_404(user_id)
+    data = request.get_json()
+
+    if 'role' in data:
+        if data['role'] not in ['user', 'admin']:
+            return jsonify({'error': 'Rôle invalide'}), 400
+        user.role = data['role']
+
+    if 'is_active' in data:
+        user.is_active = data['is_active']
+
+    db.session.commit()
+
+    return jsonify({
+        'id': user.id,
+        'email': user.email,
+        'role': user.role,
+        'is_active': user.is_active
+    })
