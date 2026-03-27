@@ -208,20 +208,14 @@
     .then(data => {
       if (data.success) {
         // Remove the logo card from DOM with animation
-        const grid = document.getElementById('logos-grid');
-        if (grid) {
-          const cards = grid.querySelectorAll('[data-institution]');
-          cards.forEach(card => {
-            const institution = card.getAttribute('data-institution') || '';
-            if (institution.includes(currentDeleteLogoName.toLowerCase())) {
-              // Fade out animation
-              card.style.transition = 'opacity 0.3s ease-in-out';
-              card.style.opacity = '0';
-              setTimeout(() => {
-                card.remove();
-              }, 300);
-            }
-          });
+        const card = document.querySelector(`[data-logo-id="${currentDeleteLogoId}"]`);
+        if (card) {
+          // Fade out animation
+          card.style.transition = 'opacity 0.3s ease-in-out';
+          card.style.opacity = '0';
+          setTimeout(() => {
+            card.remove();
+          }, 300);
         }
 
         closeDeleteModal();
