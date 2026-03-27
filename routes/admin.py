@@ -5,9 +5,10 @@ Handles admin panel routes for user management and system administration.
 """
 
 from functools import wraps
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from models import db, User
+from services.auth_service import AuthService
 
 admin_bp = Blueprint('admin', __name__, template_folder='../templates')
 
@@ -42,3 +43,56 @@ def users():
         users=all_users,
         total_users=len(all_users)
     )
+
+
+@admin_bp.route('/users/create', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def create_user():
+    """
+    Create new user page and form handler.
+    GET: Display the user creation form.
+    POST: Handle form submission and create new user.
+    """
+    if request.method == 'POST':
+        # Get form data
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '').strip()
+        password_confirm = request.form.get('password_confirm', '').strip()
+        full_name = request.form.get('full_name', '').strip()
+        role = request.form.get('role', 'user').strip()
+
+        # Validation
+        errors = []
+
+        if not email:
+            errors.append('Email est requis.')
+        if not password:
+            errors.append('Mot de passe est requis.')
+        if len(password) < 6:
+            errors.append('Mot de passe doit contenir au moins 6 caractères.')
+        if password != password_confirm:
+            errors.append('Les mots de passe ne correspondent pas.')
+        if role not in ['user', 'admin']:
+            errors.append('Rôle invalide.')
+
+        if errors:
+            for error in errors:
+                flash(error, 'error')
+            return render_template('admin/create_user.html')
+
+        # Try to create user
+        try:
+            AuthService.register_user(
+                email=email,
+                password=password,
+                full_name=full_name if full_name else None,
+                role=role
+            )
+            flash(f'Utilisateur {email} créé avec succès.', 'success')
+            return redirect(url_for('admin.users'))
+        except ValueError as e:
+            flash(str(e), 'error')
+            return render_template('admin/create_user.html')
+
+    return render_template('admin/create_user.html')
