@@ -18,7 +18,7 @@ from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 from models import db, LogoGeneration, SharedLink, Template
 from services import LogoGeneratorService, ShareService, TemplateService
-from algorithms.text_splitter import split_unit_name
+from algorithms.text_splitter import split_unit_name, split_unit_name_ambassade
 
 public_bp = Blueprint('public', __name__, template_folder='../templates')
 
@@ -89,7 +89,12 @@ def api_generate():
             language = 'fr'
 
         # Validate institution name is not empty after stripping
-        text_lines = split_unit_name(institution_name)
+        # Use model-specific text splitting function if available
+        if template.name == 'Ambassade RDC':
+            text_lines = split_unit_name_ambassade(institution_name)
+        else:
+            text_lines = split_unit_name(institution_name)
+
         if not text_lines:
             return jsonify({'error': 'Le nom de l\'institution est vide ou invalide'}), 400
 
@@ -107,7 +112,8 @@ def api_generate():
                 text_spacing=template_params.get('text_spacing'),
                 font_size=template_params.get('font_size'),
                 line_spacing=template_params.get('line_spacing'),
-                text_color=tuple(template_params.get('text_color', [0, 0, 0, 255]))
+                text_color=tuple(template_params.get('text_color', [0, 0, 0, 255])),
+                template_name=template.name
             )
 
             # Generate PNG White (white version)
@@ -118,7 +124,8 @@ def api_generate():
                 spacing=template_params.get('spacing'),
                 text_spacing=template_params.get('text_spacing'),
                 font_size=template_params.get('font_size'),
-                line_spacing=template_params.get('line_spacing')
+                line_spacing=template_params.get('line_spacing'),
+                template_name=template.name
             )
 
             # Generate JPG

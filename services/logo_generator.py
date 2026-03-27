@@ -8,7 +8,7 @@ import os
 from io import BytesIO
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
-from algorithms.text_splitter import split_unit_name
+from algorithms.text_splitter import split_unit_name, split_unit_name_ambassade
 from config.constants import (
     LOGO_ASSETS_PATH, ARMOIRIES_FILE, ARMOIRIES_WHITE_FILE,
     LIGNE_ETAT_FILE, LIGNE_ETAT_WHITE_FILE, FONT_FILE,
@@ -46,7 +46,8 @@ class LogoGeneratorService:
         font_size: int = None,
         line_spacing: int = None,
         text_color: tuple = None,
-        white_mode: bool = False
+        white_mode: bool = False,
+        template_name: str = None
     ) -> BytesIO:
         """
         Generate logo as PNG BytesIO.
@@ -88,8 +89,11 @@ class LogoGeneratorService:
         # Resize ligne_etat to match armoiries height
         ligne_etat = self._resize_image_by_height(ligne_etat, armoiries_height)
 
-        # Split institution name into lines
-        text_lines = split_unit_name(unit_nom)
+        # Split institution name into lines (use model-specific function if available)
+        if template_name == 'Ambassade RDC':
+            text_lines = split_unit_name_ambassade(unit_nom)
+        else:
+            text_lines = split_unit_name(unit_nom)
 
         if not text_lines:
             raise ValueError("Institution name cannot be empty")
@@ -151,7 +155,8 @@ class LogoGeneratorService:
         spacing: int = None,
         text_spacing: int = None,
         font_size: int = None,
-        line_spacing: int = None
+        line_spacing: int = None,
+        template_name: str = None
     ) -> BytesIO:
         """
         Generate white version of logo (white armoiries, white ligne_etat, white text) as PNG BytesIO.
@@ -177,7 +182,8 @@ class LogoGeneratorService:
             font_size=font_size,
             line_spacing=line_spacing,
             text_color=TEXT_COLOR_WHITE,
-            white_mode=True
+            white_mode=True,
+            template_name=template_name
         )
 
     def convert_png_to_jpg(self, png_buf: BytesIO, quality: int = 95) -> BytesIO:

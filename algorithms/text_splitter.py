@@ -24,6 +24,49 @@ ARTICLES_AND_PREPOSITIONS = {
 }
 
 
+def split_unit_name_ambassade(nom: str) -> list:
+    """
+    Special splitting algorithm for Ambassade RDC model.
+    Groups up to 3 "real" words per line (articles/prepositions not counted).
+
+    Example:
+        "Ambassade de la République Démocratique du Congo près le Royaume du Maroc"
+        becomes:
+        ['AMBASSADE', 'DE LA RÉPUBLIQUE DÉMOCRATIQUE', 'DU CONGO PRÈS LE ROYAUME', 'DU MAROC']
+    """
+    if not nom or not nom.strip():
+        return []
+
+    words = nom.upper().split()
+    words = [w for w in words if w]
+
+    if not words:
+        return []
+
+    # Split into lines with max 3 real words per line
+    split_lines = []
+    current_line = []
+    real_words_in_line = 0
+
+    for word in words:
+        current_line.append(word)
+
+        if word not in ARTICLES_AND_PREPOSITIONS:
+            real_words_in_line += 1
+
+            # If we've reached 3 real words, commit the line
+            if real_words_in_line >= 3:
+                split_lines.append(' '.join(current_line))
+                current_line = []
+                real_words_in_line = 0
+
+    # Handle remaining words
+    if current_line:
+        split_lines.append(' '.join(current_line))
+
+    return split_lines
+
+
 def split_unit_name(nom: str, max_lines: int = 5) -> list:
     """
     Split unit/institution name into lines for logo generation.
