@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Créer un utilisateur - Admin{% endblock %}
+
+{% block content %}
+<div class="create-user-page">
+  <!-- Page Header -->
+  <div style="margin-bottom: var(--space-8);">
+    <a href="{{ url_for('admin.users') }}" style="color: var(--primary); text-decoration: none; font-weight: 600; margin-bottom: var(--space-4); display: inline-block;">
+      ← Retour à la gestion des utilisateurs
+    </a>
+    <h1>Créer un nouvel utilisateur</h1>
+    <p style="color: var(--text-secondary); margin-top: var(--space-2);">
+      Remplissez le formulaire ci-dessous pour créer un nouvel utilisateur.
+    </p>
+  </div>
+
+  <!-- Form Container -->
+  <div style="background: white; border: 1px solid var(--border-soft); border-radius: var(--radius-lg); padding: var(--space-8); max-width: 600px;">
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding: var(--space-4); margin-bottom: var(--space-6); border-radius: var(--radius-md); border-left: 4px solid {% if category == 'error' %}#ef4444{% else %}#22c55e{% endif %}; background-color: {% if category == 'error' %}#fef2f2{% else %}#f0fdf4{% endif %}; color: {% if category == 'error' %}#991b1b{% else %}#166534{% endif %};">
+            <span style="font-weight: 600;">{{ message }}</span>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin.create_user') }}">
+      <!-- Email Field -->
+      <div style="margin-bottom: var(--space-6);">
+        <label for="email" style="display: block; font-weight: 600; margin-bottom: var(--space-2);">Email *</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="utilisateur@example.com"
+          required
+          style="width: 100%; padding: var(--space-3) var(--space-4); border: 1px solid var(--border-soft); border-radius: var(--radius-md); font-size: var(--text-base); box-sizing: border-box;"
+        >
+        <p style="color: var(--text-secondary); font-size: var(--text-xs); margin-top: var(--space-2);">
+          L'adresse email doit être unique dans le système.
+        </p>
+      </div>
+
+      <!-- Full Name Field -->
+      <div style="margin-bottom: var(--space-6);">
+        <label for="full_name" style="display: block; font-weight: 600; margin-bottom: var(--space-2);">Nom complet</label>
+        <input
+          type="text"
+          id="full_name"
+          name="full_name"
+          placeholder="Ex: Jean Dupont"
+          style="width: 100%; padding: var(--space-3) var(--space-4); border: 1px solid var(--border-soft); border-radius: var(--radius-md); font-size: var(--text-base); box-sizing: border-box;"
+        >
+        <p style="color: var(--text-secondary); font-size: var(--text-xs); margin-top: var(--space-2);">
+          Optionnel. Peut être rempli ultérieurement.
+        </p>
+      </div>
+
+      <!-- Password Field -->
+      <div style="margin-bottom: var(--space-6);">
+        <label for="password" style="display: block; font-weight: 600; margin-bottom: var(--space-2);">Mot de passe *</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Minimum 6 caractères"
+          required
+          style="width: 100%; padding: var(--space-3) var(--space-4); border: 1px solid var(--border-soft); border-radius: var(--radius-md); font-size: var(--text-base); box-sizing: border-box;"
+        >
+        <p style="color: var(--text-secondary); font-size: var(--text-xs); margin-top: var(--space-2);">
+          Doit contenir au moins 6 caractères.
+        </p>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div style="margin-bottom: var(--space-6);">
+        <label for="password_confirm" style="display: block; font-weight: 600; margin-bottom: var(--space-2);">Confirmer le mot de passe *</label>
+        <input
+          type="password"
+          id="password_confirm"
+          name="password_confirm"
+          placeholder="Répétez le mot de passe"
+          required
+          style="width: 100%; padding: var(--space-3) var(--space-4); border: 1px solid var(--border-soft); border-radius: var(--radius-md); font-size: var(--text-base); box-sizing: border-box;"
+        >
+        <p style="color: var(--text-secondary); font-size: var(--text-xs); margin-top: var(--space-2);">
+          Doit être identique au mot de passe ci-dessus.
+        </p>
+      </div>
+
+      <!-- Role Field -->
+      <div style="margin-bottom: var(--space-8);">
+        <label for="role" style="display: block; font-weight: 600; margin-bottom: var(--space-2);">Rôle *</label>
+        <select
+          id="role"
+          name="role"
+          required
+          style="width: 100%; padding: var(--space-3) var(--space-4); border: 1px solid var(--border-soft); border-radius: var(--radius-md); font-size: var(--text-base); box-sizing: border-box;"
+        >
+          <option value="user">Utilisateur</option>
+          <option value="admin">Admin</option>
+        </select>
+        <p style="color: var(--text-secondary); font-size: var(--text-xs); margin-top: var(--space-2);">
+          Sélectionnez le rôle pour ce nouvel utilisateur.
+        </p>
+      </div>
+
+      <!-- Form Actions -->
+      <div style="display: flex; gap: var(--space-4); justify-content: flex-end;">
+        <a href="{{ url_for('admin.users') }}" class="btn btn-outline" style="text-decoration: none; display: inline-block;">
+          Annuler
+        </a>
+        <button type="submit" class="btn btn-primary">
+          Créer l'utilisateur
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .create-user-page {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .btn {
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--text-base);
+    transition: all var(--transition-normal);
+  }
+
+  .btn-primary {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--primary-dark);
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-soft);
+  }
+
+  .btn-outline:hover {
+    background-color: var(--bg-app);
+    border-color: var(--primary);
+  }
+
+  input[type="email"],
+  input[type="text"],
+  input[type="password"],
+  select {
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  input[type="email"]:focus,
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+  }
+</style>
+{% endblock %}

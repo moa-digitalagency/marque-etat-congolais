@@ -8,7 +8,7 @@ class AuthService:
     """Service for authentication and user management"""
 
     @staticmethod
-    def register_user(email: str, password: str, full_name: str = None, language: str = 'fr') -> User:
+    def register_user(email: str, password: str, full_name: str = None, language: str = 'fr', role: str = 'user') -> User:
         """
         Register new user.
 
@@ -17,21 +17,25 @@ class AuthService:
             password: Plain text password (will be hashed)
             full_name: Optional full name
             language: Preferred language (default 'fr')
+            role: User role ('user' or 'admin'), default 'user'
 
         Returns:
             Created User object
 
         Raises:
-            ValueError: If email already exists
+            ValueError: If email already exists or invalid role
         """
         if User.query.filter_by(email=email).first():
             raise ValueError(f"User with email {email} already exists")
+
+        if role not in ['user', 'admin']:
+            raise ValueError(f"Invalid role: {role}. Must be 'user' or 'admin'")
 
         user = User(
             email=email,
             full_name=full_name,
             language=language,
-            role='user'
+            role=role
         )
         user.set_password(password)
 
