@@ -191,7 +191,7 @@
     {% if pagination %}
       <div style="margin-top: var(--space-12); display: flex; justify-content: center; gap: var(--space-2); flex-wrap: wrap;">
         {% if pagination.has_prev %}
-          <a href="{{ url_for('dashboard.index', page=pagination.prev_num) }}" class="btn btn-outline btn-sm">
+          <a href="{{ url_for('dashboard.history', page=pagination.prev_num) }}" class="btn btn-outline btn-sm">
             ← Précédent
           </a>
         {% endif %}
@@ -201,7 +201,7 @@
             {% if page_num == pagination.page %}
               <button class="btn btn-primary btn-sm">{{ page_num }}</button>
             {% else %}
-              <a href="{{ url_for('dashboard.index', page=page_num) }}" class="btn btn-outline btn-sm">
+              <a href="{{ url_for('dashboard.history', page=page_num) }}" class="btn btn-outline btn-sm">
                 {{ page_num }}
               </a>
             {% endif %}
@@ -209,7 +209,7 @@
         {% endfor %}
 
         {% if pagination.has_next %}
-          <a href="{{ url_for('dashboard.index', page=pagination.next_num) }}" class="btn btn-outline btn-sm">
+          <a href="{{ url_for('dashboard.history', page=pagination.next_num) }}" class="btn btn-outline btn-sm">
             Suivant →
           </a>
         {% endif %}
