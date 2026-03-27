@@ -17,10 +17,10 @@
     <div>
       <!-- Logo Card -->
       <div class="card" style="overflow: hidden;">
-        <!-- Preview Container - Two Versions -->
-        <div style="display: flex; gap: 0; height: 400px;">
+        <!-- Preview Container - Two Versions Stacked -->
+        <div style="display: flex; flex-direction: column; gap: 0;">
           <!-- Version Normale -->
-          <div style="flex: 1; display: flex; align-items: center; justify-content: center; background-color: var(--bg-app); padding: var(--space-8); border-right: 1px solid var(--border-soft);">
+          <div style="display: flex; align-items: center; justify-content: center; height: 400px; background-color: var(--bg-app); padding: var(--space-8); border-bottom: 1px solid var(--border-soft);">
             {% if logo.preview_url %}
               <img
                 src="{{ logo.preview_url }}"
@@ -38,7 +38,7 @@
           </div>
 
           <!-- Version White sur Fond Bleu -->
-          <div style="flex: 1; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: var(--space-8);">
+          <div style="display: flex; align-items: center; justify-content: center; height: 400px; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: var(--space-8);">
             {% if logo.preview_url_white %}
               <img
                 src="{{ logo.preview_url_white }}"

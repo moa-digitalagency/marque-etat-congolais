@@ -203,26 +203,22 @@
         <div style="margin-bottom: var(--space-8); padding: var(--space-6); background-color: var(--bg-app); border-radius: var(--radius-lg);">
           <h4 style="font-size: var(--text-sm); font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: var(--space-4); text-align: center;">Aperçu des Logos</h4>
 
-          <!-- Two Versions Side by Side -->
-          <div style="display: flex; gap: 0; height: 200px;">
+          <!-- Two Versions Stacked -->
+          <div style="display: flex; flex-direction: column; gap: 0;">
             <!-- Normal Logo -->
-            <div style="flex: 1; display: flex; align-items: center; justify-content: center; background-color: var(--bg-app); border-radius: var(--radius-lg) 0 0 var(--radius-lg); border-right: 1px solid var(--border-soft);">
+            <div style="display: flex; align-items: center; justify-content: center; height: 180px; background-color: var(--bg-app); border-radius: var(--radius-lg) var(--radius-lg) 0 0; border-bottom: 1px solid var(--border-soft);">
               <img id="share-preview" src="" alt="Logo normal aperçu" style="max-height: 100%; max-width: 100%; object-fit: contain;" />
             </div>
 
             <!-- White Logo on Dark Blue Background -->
-            <div style="flex: 1; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); border-radius: 0 var(--radius-lg) var(--radius-lg) 0;">
+            <div style="display: flex; align-items: center; justify-content: center; height: 180px; background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); border-radius: 0 0 var(--radius-lg) var(--radius-lg);">
               <img id="share-preview-white" src="" alt="Logo blanc aperçu" style="max-height: 100%; max-width: 100%; object-fit: contain;" />
             </div>
           </div>
 
-          <div style="display: flex; gap: var(--space-4); margin-top: var(--space-3); text-align: center;">
-            <div style="flex: 1;">
-              <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: 0;">Version normale</p>
-            </div>
-            <div style="flex: 1;">
-              <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: 0;">Version pour fonds sombres</p>
-            </div>
+          <div style="display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-3); text-align: center;">
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: 0;">Version normale</p>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: 0;">Version pour fonds sombres</p>
           </div>
         </div>
 
