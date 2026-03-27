@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Profil Utilisateur - {{ user.full_name or user.email }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 1400px; margin: 0 auto; padding: var(--space-8) var(--space-4);">
+  <!-- Header -->
+  <div style="margin-bottom: var(--space-8);">
+    <a href="{{ url_for('admin.users') }}" style="color: var(--primary); text-decoration: none; margin-bottom: var(--space-4); display: inline-block;">← Retour</a>
+    <h1 style="color: var(--text-primary); margin-bottom: var(--space-2);">{{ user.full_name or user.email }}</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 0;">{{ user.email }}</p>
+  </div>
+
+  <!-- User Info Section -->
+  <div class="card" style="margin-bottom: var(--space-8); padding: var(--space-8);">
+    <h2 style="margin-bottom: var(--space-6);">Informations du Compte</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-6);">
+      <div>
+        <p style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-2);">Email</p>
+        <p style="font-size: var(--text-lg); font-weight: 600; margin-bottom: 0;">{{ user.email }}</p>
+      </div>
+      <div>
+        <p style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-2);">Rôle</p>
+        <p style="font-size: var(--text-lg); font-weight: 600; margin-bottom: 0;">{{ 'Admin' if user.role == 'admin' else 'Utilisateur' }}</p>
+      </div>
+      <div>
+        <p style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-2);">Statut</p>
+        <p style="font-size: var(--text-lg); font-weight: 600; margin-bottom: 0;">{{ 'Actif' if user.is_active else 'Inactif' }}</p>
+      </div>
+      <div>
+        <p style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-2);">Ministère</p>
+        <p style="font-size: var(--text-lg); font-weight: 600; margin-bottom: 0;">{{ user.ministry or 'N/A' }}</p>
+      </div>
+      <div>
+        <p style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-2);">Créé le</p>
+        <p style="font-size: var(--text-lg); font-weight: 600; margin-bottom: 0;">{{ user.created_at.strftime('%d %b %Y %H:%M') }}</p>
+      </div>
+      <div>
+        <p style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-2);">Mis à jour le</p>
+        <p style="font-size: var(--text-lg); font-weight: 600; margin-bottom: 0;">{{ user.updated_at.strftime('%d %b %Y %H:%M') }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Section -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-8);">
+    <!-- Total Logos -->
+    <div class="card" style="border-left: 4px solid var(--primary); padding: var(--space-8);">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; margin-bottom: var(--space-2);">Logos Générés</p>
+          <p style="font-size: var(--text-4xl); font-weight: 700; color: var(--text-primary); margin-bottom: 0;">{{ total_logos }}</p>
+        </div>
+        <div style="background-color: var(--primary-light); padding: var(--space-4); border-radius: var(--radius-lg);">
+          <svg style="width: 32px; height: 32px; color: var(--primary);" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logos This Month -->
+    <div class="card" style="border-left: 4px solid var(--rdc-rouge); padding: var(--space-8);">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; margin-bottom: var(--space-2);">Ce Mois</p>
+          <p style="font-size: var(--text-4xl); font-weight: 700; color: var(--text-primary); margin-bottom: 0;">{{ logos_this_month }}</p>
+        </div>
+        <div style="background-color: rgba(230, 30, 30, 0.1); padding: var(--space-4); border-radius: var(--radius-lg);">
+          <svg style="width: 32px; height: 32px; color: var(--rdc-rouge);" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h12a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Last Logo -->
+    <div class="card" style="border-left: 4px solid var(--color-success); padding: var(--space-8);">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; margin-bottom: var(--space-2);">Dernier Logo</p>
+          <p style="font-size: var(--text-lg); font-weight: 600; color: var(--text-primary); margin-bottom: 0;">{{ last_logo_date or 'N/A' }}</p>
+        </div>
+        <div style="background-color: rgba(34, 197, 94, 0.1); padding: var(--space-4); border-radius: var(--radius-lg);">
+          <svg style="width: 32px; height: 32px; color: var(--color-success);" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.3A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Logos -->
+  {% if recent_logos %}
+  <div class="card">
+    <h2 style="margin-bottom: var(--space-6);">Logos Récents</h2>
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: var(--bg-subtle); border-bottom: 1px solid var(--border-soft);">
+            <th style="padding: var(--space-4); text-align: left; font-weight: 600; color: var(--text-secondary);">Institution</th>
+            <th style="padding: var(--space-4); text-align: left; font-weight: 600; color: var(--text-secondary);">Modèle</th>
+            <th style="padding: var(--space-4); text-align: left; font-weight: 600; color: var(--text-secondary);">Créé le</th>
+            <th style="padding: var(--space-4); text-align: left; font-weight: 600; color: var(--text-secondary);">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for logo in recent_logos %}
+          <tr style="border-bottom: 1px solid var(--border-soft);">
+            <td style="padding: var(--space-4); color: var(--text-primary);">{{ logo.institution_name }}</td>
+            <td style="padding: var(--space-4); color: var(--text-primary);">{{ logo.template.name if logo.template else 'N/A' }}</td>
+            <td style="padding: var(--space-4); color: var(--text-secondary); font-size: var(--text-sm);">{{ logo.created_at.strftime('%d %b %Y') }}</td>
+            <td style="padding: var(--space-4);">
+              <a href="{{ url_for('dashboard.logo_detail', logo_id=logo.id) }}" class="btn btn-outline" style="padding: var(--space-2) var(--space-3); font-size: var(--text-sm); text-decoration: none;">Voir</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="card">
+    <p style="color: var(--text-secondary); text-align: center; padding: var(--space-8);">Aucun logo généré</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
