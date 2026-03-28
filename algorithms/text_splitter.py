@@ -69,13 +69,20 @@ def split_unit_name_ambassade(nom: str) -> list:
     # First real word group goes alone on first line
     split_lines.append(word_groups[0])
 
-    # Combine remaining groups: aim for 2 real words per line, max 3
+    # Combine remaining groups: aim for 2 real words per line, max 3, max 5 lines total
     current_line_groups = []
     real_words_in_line = 0
 
     for group in word_groups[1:]:
         # Count real words in this group
         real_word_count = sum(1 for w in group.split() if w not in ARTICLES_AND_PREPOSITIONS)
+
+        # Check if we're about to exceed max 5 lines (4 are already committed, so check against 4)
+        if len(split_lines) >= 4:
+            # We have 4 lines already (including the first), so keep remaining groups on the 5th line
+            current_line_groups.append(group)
+            real_words_in_line += real_word_count
+            continue
 
         # If we already have 2 real words, start a new line (unless next would be 3 or fewer total)
         if real_words_in_line >= 2 and real_words_in_line + real_word_count > 2:
