@@ -20,14 +20,15 @@ ARTICLES_AND_PREPOSITIONS = {
     'DE', 'LA', 'DU', 'LE', 'L', "L'", 'UN', 'UNE', 'DES',
     'AU', 'AUX', 'ET', 'OU', 'D', "D'", 'EN', 'POUR', 'AVEC',
     'SANS', 'SOUS', 'SUR', 'ENTRE', 'DANS', 'PAR', 'VERS',
-    'PENDANT', 'DEPUIS', 'JUSQU', "À", 'A',
+    'PENDANT', 'DEPUIS', 'JUSQU', "À", 'A', 'PRÈS',
 }
 
 
 def split_unit_name_ambassade(nom: str) -> list:
     """
     Special splitting algorithm for Ambassade RDC model.
-    Groups up to 3 "real" words per line (articles/prepositions not counted).
+    - First real word (with articles) goes alone on line 1
+    - Remaining groups are combined to max 3 real words per line
 
     Example:
         "Ambassade de la République Démocratique du Congo près le Royaume du Maroc"
@@ -43,26 +44,60 @@ def split_unit_name_ambassade(nom: str) -> list:
     if not words:
         return []
 
-    # Split into lines with max 3 real words per line
-    split_lines = []
-    current_line = []
-    real_words_in_line = 0
+    # First pass: group each real word with its preceding articles/prepositions
+    word_groups = []
+    current_group = []
 
     for word in words:
-        current_line.append(word)
+        current_group.append(word)
 
         if word not in ARTICLES_AND_PREPOSITIONS:
-            real_words_in_line += 1
+            # This is a real word, so commit the group
+            word_groups.append(' '.join(current_group))
+            current_group = []
 
-            # If we've reached 3 real words, commit the line
-            if real_words_in_line >= 3:
-                split_lines.append(' '.join(current_line))
-                current_line = []
-                real_words_in_line = 0
+    # Handle any trailing articles (shouldn't normally happen with well-formed input)
+    if current_group:
+        word_groups.append(' '.join(current_group))
 
-    # Handle remaining words
-    if current_line:
-        split_lines.append(' '.join(current_line))
+    if not word_groups:
+        return []
+
+    # Second pass: first group alone, then combine remaining groups
+    split_lines = []
+
+    # First real word group goes alone on first line
+    split_lines.append(word_groups[0])
+
+    # Combine remaining groups: aim for 2 real words per line, max 3
+    current_line_groups = []
+    real_words_in_line = 0
+
+    for group in word_groups[1:]:
+        # Count real words in this group
+        real_word_count = sum(1 for w in group.split() if w not in ARTICLES_AND_PREPOSITIONS)
+
+        # If we already have 2 real words, start a new line (unless next would be 3 or fewer total)
+        if real_words_in_line >= 2 and real_words_in_line + real_word_count > 2:
+            # Commit current line and start new one
+            if current_line_groups:
+                split_lines.append(' '.join(current_line_groups))
+            current_line_groups = [group]
+            real_words_in_line = real_word_count
+        elif real_words_in_line + real_word_count > 3:
+            # Would exceed max of 3, so commit and start new
+            if current_line_groups:
+                split_lines.append(' '.join(current_line_groups))
+            current_line_groups = [group]
+            real_words_in_line = real_word_count
+        else:
+            # Add to current line
+            current_line_groups.append(group)
+            real_words_in_line += real_word_count
+
+    # Handle remaining groups
+    if current_line_groups:
+        split_lines.append(' '.join(current_line_groups))
 
     return split_lines
 
